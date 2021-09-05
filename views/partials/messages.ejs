@@ -1,0 +1,35 @@
+<% if(typeof errors !== 'undefined') { %>
+    <% errors.forEach(function(error) { %>
+        <div class="alert alert-danger d-flex align-items-center alert-dismissible fade show" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+            <div>
+                <%= error.msg %>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <% }); %>
+<% } %>
+
+<% if(success_msg.length !== 0) { %>
+    <div class="alert alert-success d-flex align-items-center alert-dismissible fade show" role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+        <div>
+            <%= success_msg %>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<% } %>
+
+<% if(error_msg.length !== 0) { %>
+    <div class="alert alert-danger d-flex align-items-center alert-dismissible fade show" role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+        <div>
+            <%= error_msg %>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<% }
+
+console.log(success_msg);
+console.log(error_msg);
+%>
