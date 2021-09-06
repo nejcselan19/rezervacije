@@ -1,1 +1,4 @@
 ﻿helper.txt
+config/keys.js
+/node_modules/
+.env
