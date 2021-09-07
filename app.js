@@ -23,6 +23,9 @@ mongoose.connect(db, { useNewUrlParser: true })
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
 
+// Public folder
+app.use(express.static('./public'));
+
 // Bodyparser
 app.use(express.urlencoded({extended: false}));
 
