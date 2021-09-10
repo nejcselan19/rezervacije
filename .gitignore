@@ -3,3 +3,4 @@ config/keys.js
 /node_modules/
 .env
 node_modules
+public/uploads

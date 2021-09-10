@@ -7,10 +7,19 @@ const passport = require('passport');
 const User = require('../models/User');
 
 // Login page
-router.get('/login', (req,res) => res.render('login'));
+router.get('/login', (req,res) => res.render('login', { layout: './layouts/layout'}));
+
+//Login handle
+router.post('/login', (req, res, next) => {
+    passport.authenticate('local', {
+        successRedirect: '/dashboard',
+        failureRedirect: '/users/login',
+        failureFlash: true
+    })(req, res, next);
+});
 
 // Register page
-router.get('/register', (req,res) => res.render('register'));
+router.get('/register', (req,res) => res.render('register', { layout: './layouts/layout'}));
 
 // Register handle
 router.post('/register', (req, res) => {
@@ -80,14 +89,6 @@ router.post('/register', (req, res) => {
     }
 })
 
-//Login handle
-router.post('/login', (req, res, next) => {
-    passport.authenticate('local', {
-        successRedirect: '/dashboard',
-        failureRedirect: '/users/login',
-        failureFlash: true
-    })(req, res, next);
-});
 
 //Logout handle
 router.get('/logout', (req, res) => {

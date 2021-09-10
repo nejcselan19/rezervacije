@@ -3,12 +3,29 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const { ensureAuthenticated } = require('../config/auth');
+const User = require('../models/User');
 
+// Home page
+router.get('/', (req,res) => {
+    console.log(req.user);
+    if (req.isAuthenticated()) {
+        res.render('home', {
+            _pageTitle: 'Home - Logged user',
+            _user: req.user
+        })
+    } else {
+        res.render('home', {
+            _pageTitle: 'Home - No user',
+            layout: './layouts/layout'
+        })
+    }
+});
 
-router.get('/', (req,res) => res.render('home'));
+// Dashboard page
 router.get('/dashboard', ensureAuthenticated, (req,res) =>
     res.render('dashboard', {
-        name: req.user.name
+        _pageTitle: 'Home - Logged user',
+        _user: req.user
     })
 );
 

@@ -11,6 +11,7 @@ const app = express();
 // Passport Config
 require('./config/passport')(passport);
 
+
 // DB Config
 const db = require('./config/keys').MongoURI;
 
@@ -19,12 +20,16 @@ mongoose.connect(db, { useNewUrlParser: true })
     .then(() => console.log('MongoDB Connected...'))
     .catch( err => console.log(err));
 
+
 // EJS
 app.use(expressLayouts);
+app.set('layout', './layouts/layout-logged')
 app.set('view engine', 'ejs');
+
 
 // Public folder
 app.use(express.static('./public'));
+
 
 // Bodyparser
 app.use(express.urlencoded({extended: false}));
@@ -35,6 +40,7 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }));
+
 
 //Passport middleware
 app.use(passport.initialize());
@@ -51,9 +57,11 @@ app.use((req,res,next) => {
     next();
 })
 
+
 //routes
 app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
+app.use('/places', require('./routes/places'));
 
 
 const PORT = process.env.PORT || 5000;
