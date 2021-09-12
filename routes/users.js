@@ -53,7 +53,7 @@ router.get('/register', (req,res) => res.render('register', { layout: './layouts
 router.get('/login', (req,res) => res.render('login', { layout: './layouts/layout'}));
 
 // User profile page
-router.get('/profile', ensureAuth, (req,res) => res.render('profile', { _user: req.user }));
+router.get('/profile', ensureAuth, (req,res) => res.render('profile', { user: req.user }));
 
 // @desc Show user edit page
 // @route GET /users/edit/:id
@@ -67,16 +67,13 @@ router.get('/edit/:id', ensureAuth, async (req, res) => {
     }
 
     res.render('profile-edit', {
-        _user: user
+        user
     })
 })
 
 // @desc Update user
 // @route POST /users/edit/:id
 router.post('/edit/:id', ensureAuth, upload, async (req, res) => {
-    console.log('REQ PARAMS:', req.params )
-    console.log('REQ BODY:', req.body )
-    console.log('REQ FILE:', req.file )
     let newData = req.body;
     let newImage = '';
 
@@ -187,7 +184,7 @@ router.post('/register', (req, res) => {
 //Login handle
 router.post('/login', (req, res, next) => {
     passport.authenticate('local', {
-        successRedirect: '/dashboard',
+        successRedirect: '/explore',
         failureRedirect: '/users/login',
         failureFlash: true
     })(req, res, next);
