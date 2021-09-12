@@ -75,7 +75,7 @@ console.log(pageTitle);
             <div class="dropdown">
                 <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <img class="profile-pic-circle d-inline mr-1"
-                         src="<%= './public/uploads/' + user.profilePic || 'https://media.geeksforgeeks.org/wp-content/uploads/20200630132503/iflag.jpg' %>"
+                         src="<%= '/uploads/' + user.profilePic || 'https://media.geeksforgeeks.org/wp-content/uploads/20200630132503/iflag.jpg' %>"
                          width="30" height="30">
                     <%= user.firstName + ' ' + user.lastName %>
                 </button>
@@ -95,6 +95,11 @@ console.log(pageTitle);
 </div>
 
 
+    <!-- Feather icons -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script>
+        feather.replace()
+    </script>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

@@ -13,9 +13,9 @@ const PlaceSchema = new mongoose.Schema({
         type: String,
         maxlength: [500, `Max characters allowed ({MAXLENGTH}) exceeded!`]
     },
-    img: {
-        type: String
-    },
+    images: [{
+        type: String,
+    }],
     price: {
         type: Number,
         min: [0, 'Price must be 0 or higher'],
@@ -23,31 +23,13 @@ const PlaceSchema = new mongoose.Schema({
     },
     pricePer: {
         type: String,
-        required: [true, 'Category required'],
-        enum: ['Keyboard', 'Computer']
+        required: [true, 'Unit required'],
+        enum: ['h', 'd']
     },
     address: {
-        type: String,
-        required: true
-    },
-    postalCode: {
-        type: String,
-        maxlength: [4, 'Wrong postal code'],
-        required: true
-    },
-    city: {
-        type: String,
-        required: true
-    },
-    // reservationCalendar: {
-    //
-    // },
-    date: {
-        type: Date,
-        required: true,
-        default: Date.now
+        type: String
     }
-});
+}, { timestamps: true });
 
 const Place = mongoose.model('Place', PlaceSchema);
 

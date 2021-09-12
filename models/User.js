@@ -33,21 +33,10 @@ const UserSchema = new mongoose.Schema({
         type: String,
         default: 'defaultProfile.png'
     },
-    // ASK TILEN
-    _createdAt: {
-        type: Date,
-        required: true,
-        default: Date.now
-    },
-    // _updatedAt: {
-    //     type: Date,
-    //     required: true,
-    //     default: Date.now
-    // },
     _search: {
         type: String
     }
-});
+}, { timestamps: true });
 
 const User = mongoose.model('User', UserSchema);
 

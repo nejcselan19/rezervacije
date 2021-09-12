@@ -53,7 +53,7 @@ router.get('/register', (req,res) => res.render('register', { layout: './layouts
 router.get('/login', (req,res) => res.render('login', { layout: './layouts/layout'}));
 
 // User profile page
-router.get('/profile', (req,res) => res.render('profile', { _user: req.user }));
+router.get('/profile', ensureAuth, (req,res) => res.render('profile', { _user: req.user }));
 
 // @desc Show user edit page
 // @route GET /users/edit/:id
@@ -72,8 +72,8 @@ router.get('/edit/:id', ensureAuth, async (req, res) => {
 })
 
 // @desc Update user
-// @route PUT /users/edit/:id
-router.post('/edit/:id', upload, async (req, res) => {
+// @route POST /users/edit/:id
+router.post('/edit/:id', ensureAuth, upload, async (req, res) => {
     console.log('REQ PARAMS:', req.params )
     console.log('REQ BODY:', req.body )
     console.log('REQ FILE:', req.file )
@@ -143,7 +143,7 @@ router.post('/register', (req, res) => {
 
     if (errors.length > 0) {
         data.errors = errors;
-        res.render('register', data);
+        res.render('register', { ...data });
     } else {
         // Validation passed
         User.findOne({email: email})
@@ -194,7 +194,7 @@ router.post('/login', (req, res, next) => {
 });
 
 //Logout handle
-router.get('/logout', (req, res) => {
+router.get('/logout', ensureAuth, (req, res) => {
     req.logout();
     req.flash('success_msg', 'You are logged out.');
     res.redirect('/users/login');
