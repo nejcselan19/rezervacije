@@ -2,32 +2,132 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
+const fs = require('fs');
 
 // User model
 const User = require('../models/User');
+const { ensureAuth } = require("../config/auth");
 
-// Login page
-router.get('/login', (req,res) => res.render('login', { layout: './layouts/layout'}));
+const multer = require("multer");
+const path = require("path");
 
-//Login handle
-router.post('/login', (req, res, next) => {
-    passport.authenticate('local', {
-        successRedirect: '/dashboard',
-        failureRedirect: '/users/login',
-        failureFlash: true
-    })(req, res, next);
-});
+// upload stuff
+// Set storage engine - Multer
+const storage = multer.diskStorage({
+    destination: './public/uploads/',
+    filename: function (req, file, cb) {
+        cb(null,file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+})
+// Init upload
+const upload = multer({
+    storage: storage,
+    limits:{fileSize: 3000000},
+    fileFilter: function (req, file, cb) {
+        checkFileType(file, cb);
+    }
+}).single('profilePicture');
+// Check file type
+function checkFileType(file, cb) {
+    // Allowed extensions
+    const fileTypes = /jpeg|jpg|png|gif/;
+    // Check ext
+    const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
+    // Check mime
+    const mimetype = fileTypes.test(file.mimetype);
+
+    if(mimetype && extname){
+        return cb(null, true);
+    } else {
+        cb('Error: Only images can be uploaded');
+    }
+}
+
+
+// PAGES
 
 // Register page
 router.get('/register', (req,res) => res.render('register', { layout: './layouts/layout'}));
 
+// Login page
+router.get('/login', (req,res) => res.render('login', { layout: './layouts/layout'}));
+
+// User profile page
+router.get('/profile', (req,res) => res.render('profile', { _user: req.user }));
+
+// @desc Show user edit page
+// @route GET /users/edit/:id
+router.get('/edit/:id', ensureAuth, async (req, res) => {
+    const user = await User.findOne({
+        _id: req.params.id
+    })
+
+    if(!user){
+        return res.render('errors/404')
+    }
+
+    res.render('profile-edit', {
+        _user: user
+    })
+})
+
+// @desc Update user
+// @route PUT /users/edit/:id
+router.post('/edit/:id', upload, async (req, res) => {
+    console.log('REQ PARAMS:', req.params )
+    console.log('REQ BODY:', req.body )
+    console.log('REQ FILE:', req.file )
+    let newData = req.body;
+    let newImage = '';
+
+    if(req.file){
+        newImage = req.file.filename;
+        if(req.body.old_image !== 'defaultProfile.png'){
+            try {
+                fs.unlinkSync(`./public/uploads/${req.body.old_image}`);
+            } catch (err){
+                console.log(err);
+            }
+        }
+    } else {
+        newImage = req.body.old_image;
+    }
+    // add image name to body data
+    newData.profilePic = newImage;
+
+    let user = await User.findById(req.params.id).lean();
+
+    if(!user){
+        return res.render('errors/404')
+    }
+
+    User.findOneAndUpdate({_id: req.params.id}, newData, {
+        new: true,
+        runValidators: true,
+    }, (err, result) => {
+        if(err){
+            console.log(err)
+        } else {
+            req.flash('success_msg', 'User updated successfully!');
+            res.redirect('/users/profile')
+        }
+    });
+
+})
+
+
+
+
+//HANDLING ACTIONS
+
 // Register handle
 router.post('/register', (req, res) => {
-    const { name, email, password, password2 } = req.body;
+    const data = req.body;
+    const { firstName, lastName, email, phone, address, postalCode, city, password, password2 } = data;
     let errors = [];
 
     // Check required fields
-    if(!name || !email || !password || !password2){
+    if(!firstName || !lastName || !email || !phone || !password || !password2){
         errors.push({ msg: 'Please fill in all fields.' });
     }
 
@@ -42,13 +142,8 @@ router.post('/register', (req, res) => {
     }
 
     if (errors.length > 0) {
-        res.render('register', {
-            errors,
-            name,
-            email,
-            password,
-            password2
-        });
+        data.errors = errors;
+        res.render('register', data);
     } else {
         // Validation passed
         User.findOne({email: email})
@@ -56,17 +151,17 @@ router.post('/register', (req, res) => {
                 if(user){
                     // User exists
                     errors.push({msg: 'Email already registered'});
-                    res.render('register', {
-                        errors,
-                        name,
-                        email,
-                        password,
-                        password2
-                    });
+                    data.errors = errors;
+                    res.render('register', data);
                 } else {
                     const newUser = new User({
-                        name,
+                        firstName,
+                        lastName,
                         email,
+                        phone,
+                        address,
+                        postalCode,
+                        city,
                         password
                     });
 
@@ -89,6 +184,14 @@ router.post('/register', (req, res) => {
     }
 })
 
+//Login handle
+router.post('/login', (req, res, next) => {
+    passport.authenticate('local', {
+        successRedirect: '/dashboard',
+        failureRedirect: '/users/login',
+        failureFlash: true
+    })(req, res, next);
+});
 
 //Logout handle
 router.get('/logout', (req, res) => {

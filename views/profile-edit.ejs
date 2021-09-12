@@ -1,0 +1,178 @@
+<%
+const user = typeof _user !== "undefined" ? _user : {};
+%>
+<script>
+    $(document).ready(function(){
+
+        function previewProfileImage( uploader ) {
+            console.log('Uploader ----> ',uploader);
+            console.log('Uploader ----> ',uploader.files);
+            //ensure a file was selected
+            if( uploader.files && uploader.files[0] ){
+                $('#profileImage').css('background-image', 'url(' + window.URL.createObjectURL(uploader.files[0]) + ')');
+                $('#profileImage2').attr('src', window.URL.createObjectURL(uploader.files[0]) );
+            }
+        }
+
+        // jQuery methods go here...
+        $("#profileImageBtn").click(function(e) {
+            $("#imageUpload").click();
+        });
+
+        $("#imageUpload").change(function(){
+            previewProfileImage( this );
+        });
+    });
+</script>
+<div class="container">
+    <form action="/users/edit/<%= user._id %>" enctype="multipart/form-data"  method="POST">
+<!--        <input type="hidden" name="_method" value="PUT">-->
+
+        <div class="row p-4">
+            <div class="col-content">
+                <div style="position: relative;">
+                    <img id="profileImage2" src="../../uploads/<%= user.profilePic %>" alt="profile picture" width="200px" style="position: relative;">
+                    <div class="change-pic-button cursor-pointer">
+                        <span id="profileImageBtn">Change image</span>
+                        <input id="imageUpload" name="profilePicture" type="file" style="display: none;">
+
+                        <input type="hidden" name="old_image" value="<%= user.profilePic %>">
+                    </div>
+                </div>
+<!--                <div id="profileImage" style="background-image: url(../../uploads/<%= user.profilePic %>); background-repeat: no-repeat; background-position: center; height: 200px; width: 200px; position: relative;">-->
+<!--                    <div class="change-pic-button cursor-pointer">-->
+<!--                        <span id="profileImageBtn">Change image</span>-->
+<!--                        <input id="imageUpload" name="profilePicture" type="file" style="display: none;">-->
+<!--                    </div>-->
+<!--                </div>-->
+            </div>
+            <div class="col pl-4 pr-0" style="position:relative;">
+                <div class="text-right">
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        Save
+                    </button>
+                </div>
+                <div class="" style="position:absolute;bottom:0;">
+                    <h4 class="m-0">Edit profile</h4>
+                </div>
+            </div>
+
+        </div>
+
+        <hr class="m-0">
+
+        <div class="row p-4">
+            <div class="col p-0">
+                <!-- Name -->
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="firstName">First name</label>
+                            <input
+                                    type="text"
+                                    id="firstName"
+                                    name="firstName"
+                                    class="form-control"
+                                    placeholder="Enter first name"
+                                    value="<%= typeof user.firstName != 'undefined' ? user.firstName : '' %>"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="lastName">Last name</label>
+                            <input
+                                    type="text"
+                                    id="lastName"
+                                    name="lastName"
+                                    class="form-control"
+                                    placeholder="Enter last name"
+                                    value="<%= typeof user.lastName != 'undefined' ? user.lastName : '' %>"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <!-- Email, Phone -->
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    class="form-control"
+                                    placeholder="Enter Email"
+                                    value="<%= typeof user.email != 'undefined' ? user.email : '' %>"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input
+                                    type="text"
+                                    id="phone"
+                                    name="phone"
+                                    class="form-control"
+                                    placeholder="Enter phone"
+                                    value="<%= typeof user.phone != 'undefined' ? user.phone : '' %>"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Address -->
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <input
+                                    type="text"
+                                    id="address"
+                                    name="address"
+                                    class="form-control"
+                                    placeholder="Enter address"
+                                    value="<%= typeof user.address != 'undefined' ? user.address : '' %>"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <!-- Postal code and City-->
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="postalCode">Postal code</label>
+                            <input
+                                    type="text"
+                                    id="postalCode"
+                                    name="postalCode"
+                                    class="form-control"
+                                    placeholder="Enter postal code"
+                                    value="<%= typeof user.postalCode != 'undefined' ? user.postalCode : '' %>"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            <input
+                                    type="text"
+                                    id="city"
+                                    name="city"
+                                    class="form-control"
+                                    placeholder="Enter city"
+                                    value="<%= typeof user.city != 'undefined' ? user.city : '' %>"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<%- include('partials/messages'); %>
+

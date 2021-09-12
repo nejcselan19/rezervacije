@@ -1,7 +1,11 @@
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
-    name: {
+    firstName: {
+        type: String,
+        required: true
+    },
+    lastName: {
         type: String,
         required: true
     },
@@ -9,14 +13,39 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    phone: {
+        type: String,
+    },
+    address: {
+      type: String,
+    },
+    postalCode: {
+        type: String,
+    },
+    city: {
+        type: String,
+    },
     password: {
         type: String,
         required: true
     },
-    date: {
+    profilePic: {
+        type: String,
+        default: 'defaultProfile.png'
+    },
+    // ASK TILEN
+    _createdAt: {
         type: Date,
         required: true,
         default: Date.now
+    },
+    // _updatedAt: {
+    //     type: Date,
+    //     required: true,
+    //     default: Date.now
+    // },
+    _search: {
+        type: String
     }
 });
 
