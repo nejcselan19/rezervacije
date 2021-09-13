@@ -3,9 +3,6 @@ user = typeof user !== "undefined" ? user : {};
 //const places = typeof _places !== "undefined" ? _places : null;
 const pageTitle = typeof _pageTitle != "undefined" ? _pageTitle : 'Reservations App';
 
-console.log('Rendering logged layout page...');
-console.log(user);
-console.log(pageTitle);
 %>
 <!doctype html>
 <html lang="en">
@@ -24,30 +21,16 @@ console.log(pageTitle);
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <link rel="stylesheet" type="text/css" href="/stylesheets/layout-logged.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/layout-logged.css"/>
     <title><%= pageTitle %></title>
 </head>
 <body>
 
-<!-- SVG Symbols-->
-<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
-        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
-    </symbol>
-    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
-        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
-    </symbol>
-    <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
-        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-    </symbol>
-</svg>
-<!-- SVG Symbols-->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container-fluid">
-        <div class="mr-5">
-            <a class="navbar-nav text-white" href="/"><i data-feather="clock" width="30" height="30"></i></a>
-        </div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
 
+        <a class="navbar-brand" href="/">
+            <img src="/uploads/logo.png" width="150px" class="d-inline-block align-top" alt="">
+        </a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
@@ -57,7 +40,7 @@ console.log(pageTitle);
         </div>
 
         <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img class="profile-pic-circle d-inline mr-1"
                      src="<%= '/uploads/' + user.profilePic || 'https://media.geeksforgeeks.org/wp-content/uploads/20200630132503/iflag.jpg' %>"
                      width="30" height="30">
@@ -70,14 +53,14 @@ console.log(pageTitle);
                 <a class="w-100 btn btn-outline-danger btn-sm" href="/users/logout">Logout</a>
             </div>
         </div>
-    </div>
 </nav>
 
 <div>
     <%- body %>
 </div>
 
-
+<!-- Custom script -->
+<script type="text/javascript" src="/js/script.js"></script>
     <!-- Feather icons -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <script>

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
-const PlaceSchema = new mongoose.Schema({
+const ItemSchema = new mongoose.Schema({
+    ownerId: mongoose.Types.ObjectId,
     title: {
         type: String,
         required: [true, 'Title required']
@@ -13,13 +14,13 @@ const PlaceSchema = new mongoose.Schema({
         type: String,
         maxlength: [500, `Max characters allowed ({MAXLENGTH}) exceeded!`]
     },
-    images: [{
-        type: String,
-    }],
+    image: {
+        type: String
+    },
     price: {
         type: Number,
         min: [0, 'Price must be 0 or higher'],
-        required: true
+        required: [true, 'Price required'],
     },
     pricePer: {
         type: String,
@@ -31,6 +32,6 @@ const PlaceSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-const Place = mongoose.model('Place', PlaceSchema);
+const Item = mongoose.model('Item', ItemSchema);
 
-module.exports = Place;
+module.exports = Item;

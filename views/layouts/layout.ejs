@@ -3,9 +3,6 @@ const user = typeof _user !== "undefined" ? _user : {};
 //const places = typeof _places !== "undefined" ? _places : null;
 const pageTitle = typeof _pageTitle != "undefined" ? _pageTitle : 'Reservations App';
 
-console.log('Rendering not logged layout page...');
-console.log(user);
-console.log(pageTitle);
 %>
 
 <!doctype html>
@@ -22,7 +19,7 @@ console.log(pageTitle);
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <link rel="stylesheet" type="text/css" href="/stylesheets/layout.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/layout.css"/>
     <title><%= pageTitle %></title>
 </head>
 <body>
@@ -43,7 +40,8 @@ console.log(pageTitle);
 <div class="container">
     <%- body %>
 </div>
-
+    <!-- Custom script -->
+    <script src="/js/script.js"></script>
     <!-- Feather icons -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <script>

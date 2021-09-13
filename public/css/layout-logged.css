@@ -1,0 +1,158 @@
+/* Profile picture in navbar */
+.profile-pic-circle {
+    border-radius: 50%;
+
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+/* Main classes */
+body {
+    background: #f3f3f3;
+}
+
+.container {
+    background: #fff;
+}
+
+.top-bar {
+    height: 53px;
+    padding: 0px 20px;
+    justify-content: space-between;
+}
+.top-bar h5 {
+ }
+.top-bar #add-dialog-open {
+    margin-bottom: 8px;
+}
+
+.content {
+    padding: 0px 20px;
+}
+
+/* Dialog classes */
+/* The Modal (background) */
+.dialog {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: hidden; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+}
+.helper1 {
+    display: table;
+    height: 100%;
+    position: absolute;
+    overflow: hidden;
+    width: 100%;
+}
+.helper2 {
+    #position: absolute;
+    #top: 50%;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+/* Modal Content/Box */
+.dialog-content {
+    background: #fff; /* Fallback color */
+    #position: relative;
+    #top: -50%;
+    margin: 0 auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Login, register card classes */
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 0 solid transparent;
+    border-radius: .25rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 6px 0 rgb(218 218 253 / 65%), 0 2px 6px 0 rgb(206 206 238 / 54%);
+}
+
+/* Profile edit img upload button */
+.change-pic-button {
+    background-color: rgba(70, 70, 70, 0.76);
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    z-index: 999;
+    text-align: center;
+    text-decoration-color: white;
+}
+.change-pic-button span {
+    color: white;
+}
+
+/* Class to set cursor pointer */
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* The sidebar menu */
+.sidebar {
+    height: 100%; /* 100% Full-height */
+    width: 182px; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Stay on top */
+    background-color: #111; /* Black*/
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 53px; /* Place content 60px from the top */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
+}
+
+/* The sidebar links */
+.sidebar a {
+    padding: 8px 16px 8px 16px;
+    text-decoration: none;
+    font-size: 16px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidebar a:hover {
+    background-color: #282828; /* Black*/
+    color: #f1f1f1;
+}
+
+
+/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+#main {
+    margin-left: 182px;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+    .sidebar {padding-top: 15px;}
+}

@@ -7,7 +7,6 @@ const User = require('../models/User');
 
 // Home page
 router.get('/', (req,res) => {
-    console.log(req.user);
     if (req.isAuthenticated()) {
         res.render('home', {
             _pageTitle: 'Home - Logged user',

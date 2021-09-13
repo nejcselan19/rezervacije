@@ -1,1 +1,43 @@
-Explore TODO
+<%
+user = typeof user !== "undefined" ? user :  {};
+items = typeof items !== "undefined" ? items : [];
+%>
+<div id="mySidebar" class="sidebar">
+    <a href="#">Sport courts</a>
+    <a href="#">Vehicles</a>
+    <a href="#">Items</a>
+    <a href="#">Services</a>
+</div>
+
+<div id="main">
+    <%- include('../partials/dialog-add'); %>
+    <div class="top-bar">
+        <div class="row h-100 align-items-end">
+            <div class="col">
+                <h5 id="heading-explore">Sport courts</h5>
+            </div>
+            <div class="col text-right">
+                <div id="add-dialog-open" class="btn btn-outline-primary btn-sm">Add +</div>
+            </div>
+        </div>
+    </div>
+    <hr style="margin: 0px 20px;">
+    <div class="content">
+        <div id="myPlaces" class="row">
+            <%
+                items.forEach(item => {
+            %>
+                <div class="col-4 border rounded bg-white">
+                    <img src="/uploads/<%= item.image %>" alt="" width="100px">
+                    <h4><%= item.title %></h4>
+                    <span><%= item.shortDesc %></span>
+                </div>
+            <%
+                })
+            %>
+        </div>
+        <div id="allPlaces" class="row">
+
+        </div>
+    </div>
+</div>
