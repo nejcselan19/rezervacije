@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const ash = require('express-async-handler')
 
 // Item model
 const Item = require('../models/Item');
@@ -42,11 +43,10 @@ function checkFileType(file, cb) {
 }
 
 
-router.get('/', ensureAuth, async (req,res) => {
+router.get('/', ensureAuth, ash(async(req,res) => {
     const allItems = await Item.find();
-    console.log('toj to: ',allItems);
     res.render('main/explore', { user: req.user, items: allItems})
-});
+}));
 
 
 
@@ -55,11 +55,11 @@ router.post('/add', upload, (req, res) => {
     const data = req.body;
     const image = req.file ? req.file.filename : 'defaultItem.png';
     const userId = req.user;
-    const { title, shortDesc, longDesc, price, pricePer, address } = data;
+    const { title, shortDesc, longDesc, price, pricePer, address, category } = data;
     let errors = [];
 
     // Check required fields
-    if(!title || !price || !pricePer){
+    if(!title || !price || !pricePer || !category){
         errors.push({ msg: 'Please fill in all fields.' });
     }
 
@@ -77,7 +77,8 @@ router.post('/add', upload, (req, res) => {
             image,
             price,
             pricePer,
-            address
+            address,
+            category
         });
 
         // Save item

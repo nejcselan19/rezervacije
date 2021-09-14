@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 
 const ItemSchema = new mongoose.Schema({
     ownerId: mongoose.Types.ObjectId,
+    ownerData: {
+        name: String,
+        email: String,
+        phone: String,
+    },
     title: {
         type: String,
         required: [true, 'Title required']
@@ -26,6 +31,11 @@ const ItemSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Unit required'],
         enum: ['h', 'd']
+    },
+    category: {
+        type: String,
+        required: [true, 'Category is required'],
+        enum: ['sport-court', 'vehicle', 'service', 'other']
     },
     address: {
         type: String

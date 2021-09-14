@@ -47,7 +47,7 @@ item = typeof item !== "undefined" ? item :  {};
 
                         <div class="col">
 
-                            <!-- Title, short desc-->
+                            <!-- Title, short desc, category -->
                             <div class="row">
                                 <div class="col-12">
                                     <div class="form-group">
@@ -73,6 +73,17 @@ item = typeof item !== "undefined" ? item :  {};
                                                 placeholder="Enter short description"
                                                 value="<%= typeof item.shortDesc != 'undefined' ? item.shortDesc : '' %>"
                                         >
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="category">Category</label>
+                                        <select class="custom-select form-control" id="category" name="category">
+                                            <option selected value="sport-court">Sport courts</option>
+                                            <option value="vehicle">Vehicles</option>
+                                            <option value="service">Services</option>
+                                            <option value="other">Other</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>

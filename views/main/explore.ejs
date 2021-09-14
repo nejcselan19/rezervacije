@@ -23,21 +23,30 @@ items = typeof items !== "undefined" ? items : [];
     </div>
     <hr style="margin: 0px 20px;">
     <div class="content">
-        <div id="myPlaces" class="row">
-            <%
-                items.forEach(item => {
-            %>
-                <div class="col-4 border rounded bg-white">
-                    <img src="/uploads/<%= item.image %>" alt="" width="100px">
-                    <h4><%= item.title %></h4>
-                    <span><%= item.shortDesc %></span>
+        <div id="myPlaces">
+            <div class="d-flex flex-row flex-nowrap horizontal-scroll py-3">
+                <%
+                    for(let i = 1; i <= items.length; i++){
+                        let item = items[i-1];
+                %>
+                <div class="col-3 p-0 pr-3">
+                    <div class="card card-block">
+                        <img class="card-img-top" src="/uploads/<%= item.image || 'defaultItem.png' %>" alt="items image">
+                        <div class="card-body">
+                            <h6 class="card-title"><%= item.title || '- title missing -' %></h6>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">Last updated 3 mins ago</small>
+                        </div>
+                    </div>
                 </div>
-            <%
-                })
-            %>
+                <%
+                    }
+                %>
+            </div>
         </div>
-        <div id="allPlaces" class="row">
 
-        </div>
+<!--        <div id="allPlaces">-->
+<!--        </div>-->
     </div>
 </div>
