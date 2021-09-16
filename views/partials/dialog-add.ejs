@@ -1,6 +1,5 @@
 <%
 user = typeof user !== "undefined" ? user :  {};
-item = typeof item !== "undefined" ? item :  {};
 %>
 <script>
     $(document).ready(function(){
@@ -31,7 +30,16 @@ item = typeof item !== "undefined" ? item :  {};
 
             <!-- Modal content -->
             <div class="dialog-content">
-                <span class="close"><i data-feather="x"></i></span>
+                <div class="row">
+                    <div class="col">
+                        <span class="close"><i data-feather="x"></i></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <%- include('../partials/messages'); %>
+                    </div>
+                </div>
                 <form action="/explore/add" enctype="multipart/form-data"  method="POST">
                     <!--        <input type="hidden" name="_method" value="PUT">-->
                     <div class="row p-4">
@@ -58,7 +66,7 @@ item = typeof item !== "undefined" ? item :  {};
                                                 name="title"
                                                 class="form-control"
                                                 placeholder="Enter Title"
-                                                value="<%= typeof item.title != 'undefined' ? item.title : '' %>"
+                                                value="<%= typeof title !== 'undefined' ? title : '' %>"
                                         />
                                     </div>
                                 </div>
@@ -71,7 +79,7 @@ item = typeof item !== "undefined" ? item :  {};
                                                 name="shortDesc"
                                                 class="form-control"
                                                 placeholder="Enter short description"
-                                                value="<%= typeof item.shortDesc != 'undefined' ? item.shortDesc : '' %>"
+                                                value="<%= typeof shortDesc !== 'undefined' ? shortDesc : '' %>"
                                         >
                                     </div>
                                 </div>
@@ -105,9 +113,8 @@ item = typeof item !== "undefined" ? item :  {};
                                                 name="longDesc"
                                                 class="form-control"
                                                 placeholder="Enter description"
-                                                value="<%= typeof item.longDesc != 'undefined' ? item.longDesc : '' %>"
                                                 rows="7"
-                                        ></textarea>
+                                        ><%= typeof longDesc !== 'undefined' ? longDesc : '' %></textarea>
                                     </div>
                                 </div>
 
@@ -124,7 +131,7 @@ item = typeof item !== "undefined" ? item :  {};
                                                 name="price"
                                                 class="form-control"
                                                 placeholder="Enter price"
-                                                value="<%= typeof item.price != 'undefined' ? item.price : '' %>"
+                                                value="<%= typeof price !== 'undefined' ? price : '' %>"
                                                 min="0"
                                         />
                                     </div>
@@ -150,7 +157,7 @@ item = typeof item !== "undefined" ? item :  {};
                                                 name="address"
                                                 class="form-control"
                                                 placeholder="Enter address"
-                                                value="<%= typeof item.address != 'undefined' ? item.address : '' %>"
+                                                value="<%= typeof address !== 'undefined' ? address : '' %>"
                                         />
                                     </div>
                                 </div>

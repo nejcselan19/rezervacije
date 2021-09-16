@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const ash = require('express-async-handler')
+const fs = require('fs');
 
 // Item model
 const Item = require('../models/Item');
@@ -47,11 +48,27 @@ router.get('/', ensureAuth, ash(async(req,res) => {
     const allItems = await Item.find();
     res.render('main/explore', { user: req.user, items: allItems})
 }));
+// Edit route
+router.get('/edit/:id', ensureAuth, ash(async(req,res) => {
 
+    console.log('Params:  ', req.params);
+    const item = await Item.findOne({
+        _id: req.params.id
+    })
 
+    if(!item){
+        return res.render('errors/404')
+    }
+
+    res.render('main/explore-edit', {
+        item,
+        user: req.user
+    })
+
+}));
 
 // Add handle
-router.post('/add', upload, (req, res) => {
+router.post('/add', upload, ash(async(req, res) => {
     const data = req.body;
     const image = req.file ? req.file.filename : 'defaultItem.png';
     const userId = req.user;
@@ -62,11 +79,23 @@ router.post('/add', upload, (req, res) => {
     if(!title || !price || !pricePer || !category){
         errors.push({ msg: 'Please fill in all fields.' });
     }
+    console.log('SIZEEE ', req.file.size);
+    //Check if file is right size, to throw nicer error than multer
+    if(req.file.size >= 3000000){
+        errors.push({ msg: 'Image to large. Max allowed size is 3MB.' });
+    }
 
     if (errors.length > 0) {
         data.errors = errors;
         data.image = image;
-        res.render('main/explore', { ...data });
+        const allItems = await Item.find();
+        console.log('Grem v bazo po podatke.');
+        console.log('Podatki: ', { ...data });
+        console.log('Podatki: ', { errors });
+        console.log('Podatki: ', { user: req.user});
+        console.log('Podatki: ', { openDialog: 'add-dialog' });
+        console.log('Podatki: ', { ...data, errors, user: req.user, items: allItems, openDialog: 'add-dialog' });
+        res.render('main/explore', { ...data, errors, user: req.user, items: allItems, openDialog: 'add-dialog' });
     } else {
         // Validation passed
         const newItem = new Item({
@@ -90,6 +119,47 @@ router.post('/add', upload, (req, res) => {
             .catch(err => console.log(err));
 
     }
+}))
+
+// Edit handle
+router.post('/edit/:id', ensureAuth, upload, async (req, res) => {
+    let newData = req.body;
+    let newImage = '';
+
+    if(req.file){
+        newImage = req.file.filename;
+        if(req.body.old_image !== 'defaultItem.png'){
+            try {
+                fs.unlinkSync(`./public/uploads/${req.body.old_image}`);
+            } catch (err){
+                console.log(err);
+            }
+        }
+    } else {
+        newImage = req.body.old_image;
+    }
+    // add image name to body data
+    newData.image = newImage;
+
+    let item = await Item.findById(req.params.id).lean();
+
+    if(!item){
+        return res.render('errors/404')
+    }
+
+    Item.findOneAndUpdate({_id: req.params.id}, newData, {
+        new: true,
+        runValidators: true,
+    }, (err, result) => {
+        if(err){
+            console.log(err)
+        } else {
+            req.flash('success_msg', 'Item updated successfully!');
+            res.redirect('/explore')
+        }
+    });
+
 })
+
 
 module.exports = router;

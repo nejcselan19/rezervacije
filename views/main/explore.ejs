@@ -1,7 +1,12 @@
 <%
 user = typeof user !== "undefined" ? user :  {};
 items = typeof items !== "undefined" ? items : [];
+openDialog = typeof openDialog !== "undefined" ? openDialog : null;
 %>
+<script>
+    let openDialog = JSON.parse('<%- JSON.stringify(openDialog) %>');
+</script>
+
 <div id="mySidebar" class="sidebar">
     <a href="#">Sport courts</a>
     <a href="#">Vehicles</a>
@@ -17,7 +22,7 @@ items = typeof items !== "undefined" ? items : [];
                 <h5 id="heading-explore">Sport courts</h5>
             </div>
             <div class="col text-right">
-                <div id="add-dialog-open" class="btn btn-outline-primary btn-sm">Add +</div>
+                <div id="add-dialog-open" class="btn btn-primary btn-sm">Add +</div>
             </div>
         </div>
     </div>
@@ -28,6 +33,32 @@ items = typeof items !== "undefined" ? items : [];
                 <%
                     for(let i = 1; i <= items.length; i++){
                         let item = items[i-1];
+                        if( item.ownerId && item.ownerId.toString().localeCompare(user._id.toString()) === 0){
+                %>
+                <div class="col-3 p-0 pr-3">
+                    <div class="card card-block">
+                        <img class="card-img-top" src="/uploads/<%= item.image || 'defaultItem.png' %>" alt="items image">
+                        <div class="card-body">
+                            <h6 class="card-title"><%= item.title || '- title missing -' %></h6>
+                        </div>
+                        <div class="card-footer d-flex align-items-center justify-content-between">
+                            <small class="text-muted">Last updated 3 mins ago</small>
+                            <a class="btn btn-sm btn-outline-secondary waves-effect px-3" href="/explore/edit/<%=  item.id %>"
+                               role="button"><i class="fas fa-pen" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <%
+                        }
+                    }
+                %>
+            </div>
+
+            <div class="d-flex flex-row flex-wrap horizontal-scroll py-3">
+                <%
+                for(let i = 1; i <= items.length; i++){
+                    let item = items[i-1];
+                if(!item.ownerId || item.ownerId.toString().localeCompare(user._id.toString()) !== 0){
                 %>
                 <div class="col-3 p-0 pr-3">
                     <div class="card card-block">
@@ -42,6 +73,7 @@ items = typeof items !== "undefined" ? items : [];
                 </div>
                 <%
                     }
+                }
                 %>
             </div>
         </div>
