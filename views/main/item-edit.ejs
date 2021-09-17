@@ -1,7 +1,6 @@
 <%
 user = typeof user !== "undefined" ? user :  {};
 item = typeof item !== "undefined" ? item : {};
-console.log('Iteeeeem -------------------------->', item);
 %>
 <script>
     $(document).ready(function(){
@@ -102,10 +101,26 @@ console.log('Iteeeeem -------------------------->', item);
                             <div class="form-group">
                                 <label for="category">Category</label>
                                 <select class="custom-select form-control" id="category" name="category" value="<%= item.category || 'Sport courts' %>">
-                                    <option selected value="sport-court">Sport courts</option>
-                                    <option value="vehicle">Vehicles</option>
-                                    <option value="service">Services</option>
-                                    <option value="other">Other</option>
+                                    <%
+                                        const allOptionsCategory = {
+                                            'sport-court': "Sport courts",
+                                            'vehicle': "Vehicles",
+                                            'service': "Services",
+                                            'other': "Other"
+                                        }
+
+                                        const renderOptionsCategory = Object.keys(allOptionsCategory).map(x => {
+                                            if(x === item.category){
+                                                return `<option selected value="${x}">${allOptionsCategory[x]}</option>`;
+                                            } else {
+                                                return `<option value="${x}">${allOptionsCategory[x]}</option>`;
+                                            }
+                                        });
+
+                                        for(let i = 0; i < renderOptionsCategory.length; i++){
+                                    %>
+                                        <%- renderOptionsCategory[i] %>
+                                    <% } %>
                                 </select>
                             </div>
                         </div>
@@ -155,8 +170,24 @@ console.log('Iteeeeem -------------------------->', item);
                             <div class="form-group">
                                 <label for="pricePer">Price per</label>
                                 <select class="custom-select form-control" id="pricePer" name="pricePer" value="<%= item.pricePer || 'h' %>">
-                                    <option selected value="h">hour</option>
-                                    <option value="d">day</option>
+                                    <%
+                                    const allOptionsPricePer = {
+                                        'h': "hour",
+                                        'd': "day"
+                                    }
+
+                                    const renderOptionsPricePer = Object.keys(allOptionsPricePer).map(x => {
+                                        if(x === item.pricePer){
+                                            return `<option selected value="${x}">${allOptionsPricePer[x]}</option>`;
+                                        } else {
+                                            return `<option value="${x}">${allOptionsPricePer[x]}</option>`;
+                                        }
+                                    });
+
+                                    for(let i = 0; i < renderOptionsPricePer.length; i++){
+                                    %>
+                                        <%- renderOptionsPricePer[i] %>
+                                    <% } %>
                                 </select>
                             </div>
                         </div>

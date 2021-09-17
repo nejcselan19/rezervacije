@@ -2,6 +2,16 @@
 user = typeof user !== "undefined" ? user :  {};
 items = typeof items !== "undefined" ? items : [];
 openDialog = typeof openDialog !== "undefined" ? openDialog : null;
+
+// Create our number formatter.
+var formatEur = new Intl.NumberFormat(undefined, {
+    style: 'currency',
+    currency: 'EUR',
+
+    // These options are needed to round to whole numbers if that's what you want.
+    //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+    //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+});
 %>
 <script>
     let openDialog = JSON.parse('<%- JSON.stringify(openDialog) %>');
@@ -31,49 +41,86 @@ openDialog = typeof openDialog !== "undefined" ? openDialog : null;
         <div id="myPlaces">
             <div class="d-flex flex-row flex-nowrap horizontal-scroll py-3">
                 <%
-                    for(let i = 1; i <= items.length; i++){
-                        let item = items[i-1];
-                        if( item.ownerId && item.ownerId.toString().localeCompare(user._id.toString()) === 0){
+                    let myItems = items.filter(x => {
+                        if(x.ownerId){
+                            return x.ownerId.toString() === user._id.toString();
+                        } else {
+                            return false;
+                        }
+                    });
+
+                    for(let i = 0; i < myItems.length; i++){
+                        let item = myItems[i];
                 %>
                 <div class="col-3 p-0 pr-3">
                     <div class="card card-block">
                         <img class="card-img-top" src="/uploads/<%= item.image || 'defaultItem.png' %>" alt="items image">
                         <div class="card-body">
-                            <h6 class="card-title"><%= item.title || '- title missing -' %></h6>
+                            <div class="row">
+                                <div class="col">
+                                    <h6 class="card-title"><%= item.title || '- title missing -' %></h6>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-euro-sign"></i>
+                                    <span style="margin-left:4px;" class="text-secondary"><%= `${formatEur.format(item.price)}/${item.pricePer}` %></span>
+                                </div>
+                            </div>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span style="margin-left:4px;" class="text-secondary"><%= item.address %></span>
                         </div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <small class="text-muted">Last updated 3 mins ago</small>
-                            <a class="btn btn-sm btn-outline-secondary waves-effect px-3" href="/explore/edit/<%=  item.id %>"
-                               role="button"><i class="fas fa-pen" aria-hidden="true"></i></a>
+                            <div>
+                                <a class="btn btn-sm btn-outline-danger waves-effect px-3" href="/explore/delete/<%=  item.id %>"
+                                   role="button"><i class="fas fa-trash-alt" aria-hidden="true"></i></a>
+                                <a class="btn btn-sm btn-outline-secondary waves-effect px-3" href="/explore/edit/<%=  item.id %>"
+                                   role="button"><i class="fas fa-pen" aria-hidden="true"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <%
-                        }
                     }
                 %>
             </div>
 
             <div class="d-flex flex-row flex-wrap horizontal-scroll py-3">
                 <%
-                for(let i = 1; i <= items.length; i++){
-                    let item = items[i-1];
-                if(!item.ownerId || item.ownerId.toString().localeCompare(user._id.toString()) !== 0){
+                let otherItems = items.filter(x => {
+                    if(x.ownerId){
+                        return x.ownerId.toString() !== user._id.toString();
+                    } else {
+                        return true;
+                    }
+                });
+
+                for(let i = 0; i < otherItems.length; i++){
+                    let item = otherItems[i];
                 %>
                 <div class="col-3 p-0 pr-3">
                     <div class="card card-block">
                         <img class="card-img-top" src="/uploads/<%= item.image || 'defaultItem.png' %>" alt="items image">
                         <div class="card-body">
-                            <h6 class="card-title"><%= item.title || '- title missing -' %></h6>
+                            <div class="row">
+                                <div class="col">
+                                    <h6 class="card-title"><%= item.title || '- title missing -' %></h6>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-euro-sign"></i>
+                                    <span style="margin-left:4px;" class="text-secondary"><%= `${formatEur.format(item.price)}/${item.pricePer}` %></span>
+                                </div>
+                            </div>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span style="margin-left:4px;" class="text-secondary"><%= item.address %></span>
                         </div>
-                        <div class="card-footer">
+                        <div class="card-footer d-flex align-items-center justify-content-between">
                             <small class="text-muted">Last updated 3 mins ago</small>
+                            <small class="text-muted">by <%= item.ownerData.name %></small>
                         </div>
                     </div>
                 </div>
                 <%
                     }
-                }
                 %>
             </div>
         </div>

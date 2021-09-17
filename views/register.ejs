@@ -1,75 +1,98 @@
-<div class="col-md-6 m-auto">
+<div class="row mt-5">
+    <div class="col-md-8 m-auto">
         <div class="card card-body">
             <h1 class="text-center mb-3">
                 <i class="fas fa-user-plus"></i> Register
             </h1>
             <%- include('partials/messages'); %>
             <form action="/users/register" method="POST">
-                <div class="form-group">
-                    <label for="firstName">First name</label>
-                    <input
-                            type="text"
-                            id="firstName"
-                            name="firstName"
-                            class="form-control"
-                            placeholder="Enter first name"
-                            value="<%= typeof firstName != 'undefined' ? firstName : '' %>"
-                    />
+                <div class="row">
+                    <div class="col">
+
+                        <div class="form-group">
+                            <label for="firstName">First name</label>
+                            <input
+                                    type="text"
+                                    id="firstName"
+                                    name="firstName"
+                                    class="form-control"
+                                    placeholder="Enter first name"
+                                    value="<%= typeof firstName != 'undefined' ? firstName : '' %>"
+                            />
+                        </div>
+                    </div>
+                    <div class="col">
+
+                        <div class="form-group">
+                            <label for="lastName">Last name</label>
+                            <input
+                                    type="text"
+                                    id="lastName"
+                                    name="lastName"
+                                    class="form-control"
+                                    placeholder="Enter last name"
+                                    value="<%= typeof lastName != 'undefined' ? lastName : '' %>"
+                            />
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="lastName">Last name</label>
-                    <input
-                            type="text"
-                            id="lastName"
-                            name="lastName"
-                            class="form-control"
-                            placeholder="Enter last name"
-                            value="<%= typeof lastName != 'undefined' ? lastName : '' %>"
-                    />
+                <div class="row">
+                    <div class="col">
+
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    class="form-control"
+                                    placeholder="Enter Email"
+                                    value="<%= typeof email != 'undefined' ? email : '' %>"
+                            />
+                        </div>
+                    </div>
+                    <div class="col">
+
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input
+                                    type="text"
+                                    id="phone"
+                                    name="phone"
+                                    class="form-control"
+                                    placeholder="Enter phone"
+                                    value="<%= typeof phone != 'undefined' ? phone : '' %>"
+                            />
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            class="form-control"
-                            placeholder="Enter Email"
-                            value="<%= typeof email != 'undefined' ? email : '' %>"
-                    />
-                </div>
-                <div class="form-group">
-                    <label for="phone">Phone</label>
-                    <input
-                            type="text"
-                            id="phone"
-                            name="phone"
-                            class="form-control"
-                            placeholder="Enter phone"
-                            value="<%= typeof phone != 'undefined' ? phone : '' %>"
-                    />
-                </div>
-                <div class="form-group">
-                    <label for="address">Address</label>
-                    <input
-                            type="text"
-                            id="address"
-                            name="address"
-                            class="form-control"
-                            placeholder="Enter address"
-                            value="<%= typeof address != 'undefined' ? address : '' %>"
-                    />
-                </div>
-                <div class="form-group">
-                    <label for="postalCode">Postal code</label>
-                    <input
-                            type="text"
-                            id="postalCode"
-                            name="postalCode"
-                            class="form-control"
-                            placeholder="Enter postal code"
-                            value="<%= typeof postalCode != 'undefined' ? postalCode : '' %>"
-                    />
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <input
+                                    type="text"
+                                    id="address"
+                                    name="address"
+                                    class="form-control"
+                                    placeholder="Enter address"
+                                    value="<%= typeof address != 'undefined' ? address : '' %>"
+                            />
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="postalCode">Postal code</label>
+                            <input
+                                    type="text"
+                                    id="postalCode"
+                                    name="postalCode"
+                                    class="form-control"
+                                    placeholder="Enter postal code"
+                                    value="<%= typeof postalCode != 'undefined' ? postalCode : '' %>"
+                            />
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="city">City</label>

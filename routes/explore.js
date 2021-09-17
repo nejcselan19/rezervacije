@@ -60,13 +60,13 @@ router.get('/edit/:id', ensureAuth, ash(async(req,res) => {
         return res.render('errors/404')
     }
 
-    res.render('main/explore-edit', {
+    res.render('main/item-edit', {
         item,
         user: req.user
     })
 
 }));
-
+// ITEM HANDLES
 // Add handle
 router.post('/add', upload, ash(async(req, res) => {
     const data = req.body;
@@ -79,11 +79,6 @@ router.post('/add', upload, ash(async(req, res) => {
     if(!title || !price || !pricePer || !category){
         errors.push({ msg: 'Please fill in all fields.' });
     }
-    console.log('SIZEEE ', req.file.size);
-    //Check if file is right size, to throw nicer error than multer
-    if(req.file.size >= 3000000){
-        errors.push({ msg: 'Image to large. Max allowed size is 3MB.' });
-    }
 
     if (errors.length > 0) {
         data.errors = errors;
@@ -91,15 +86,21 @@ router.post('/add', upload, ash(async(req, res) => {
         const allItems = await Item.find();
         console.log('Grem v bazo po podatke.');
         console.log('Podatki: ', { ...data });
-        console.log('Podatki: ', { errors });
-        console.log('Podatki: ', { user: req.user});
-        console.log('Podatki: ', { openDialog: 'add-dialog' });
-        console.log('Podatki: ', { ...data, errors, user: req.user, items: allItems, openDialog: 'add-dialog' });
         res.render('main/explore', { ...data, errors, user: req.user, items: allItems, openDialog: 'add-dialog' });
     } else {
+        const owner = await User.findOne({
+            _id: userId
+        });
+
         // Validation passed
         const newItem = new Item({
             ownerId: userId,
+            ownerData: {
+               name: owner.firstName + ' ' + owner.lastName,
+               email: owner.email,
+               phone: owner.phone,
+               address: `${owner.address}, ${owner.postalCode} ${owner.city}`
+            },
             title,
             shortDesc,
             longDesc,
@@ -155,6 +156,28 @@ router.post('/edit/:id', ensureAuth, upload, async (req, res) => {
             console.log(err)
         } else {
             req.flash('success_msg', 'Item updated successfully!');
+            res.redirect('/explore')
+        }
+    });
+
+})
+
+// Delete handle
+router.get('/delete/:id', ensureAuth, upload, async (req, res) => {
+    let id = req.params.id;
+
+    Item.findByIdAndRemove(id,(err, result) => {
+        if(result.image){
+            try{
+                fs.unlinkSync(`./public/uploads/${result.image}`);
+            } catch (err){
+                console.log(err);
+            }
+        }
+        if(err){
+            res.json({ message: err.message });
+        } else {
+            req.flash('success_msg', 'Item deleted successfully!');
             res.redirect('/explore')
         }
     });

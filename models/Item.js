@@ -6,6 +6,7 @@ const ItemSchema = new mongoose.Schema({
         name: String,
         email: String,
         phone: String,
+        address: String,
     },
     title: {
         type: String,
