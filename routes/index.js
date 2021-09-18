@@ -20,12 +20,4 @@ router.get('/', (req,res) => {
     }
 });
 
-// Dashboard page
-router.get('/dashboard', ensureAuth, (req,res) =>
-    res.render('dashboard', {
-        _pageTitle: 'Home - Logged user',
-        _user: req.user
-    })
-);
-
 module.exports = router;

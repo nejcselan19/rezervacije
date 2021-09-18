@@ -43,15 +43,34 @@ function checkFileType(file, cb) {
     }
 }
 
-
+// ROUTES
+// Explore route
 router.get('/', ensureAuth, ash(async(req,res) => {
     const allItems = await Item.find();
     res.render('main/explore', { user: req.user, items: allItems})
 }));
-// Edit route
+
+// Item route
+router.get('/:id', ensureAuth, ash(async(req,res) => {
+
+    const item = await Item.findOne({
+        _id: req.params.id
+    })
+
+    if(!item){
+        return res.render('errors/404')
+    }
+
+    res.render('main/item', {
+        item,
+        user: req.user
+    })
+
+}));
+
+// Item edit route
 router.get('/edit/:id', ensureAuth, ash(async(req,res) => {
 
-    console.log('Params:  ', req.params);
     const item = await Item.findOne({
         _id: req.params.id
     })
@@ -66,7 +85,11 @@ router.get('/edit/:id', ensureAuth, ash(async(req,res) => {
     })
 
 }));
-// ITEM HANDLES
+
+
+
+
+// HANDLING ACTIONS
 // Add handle
 router.post('/add', upload, ash(async(req, res) => {
     const data = req.body;
