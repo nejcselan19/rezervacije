@@ -5,7 +5,7 @@ const reservationSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    placeId: {
+    itemId: {
         type: String,
         required: true
     },

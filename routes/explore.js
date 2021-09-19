@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const ash = require('express-async-handler')
 const fs = require('fs');
+require('dotenv').config();
+const nodemailer = require('nodemailer');
 
 // Item model
 const Item = require('../models/Item');
@@ -42,6 +44,20 @@ function checkFileType(file, cb) {
         cb('Error: Only images can be uploaded');
     }
 }
+
+// helper functions
+
+// number formatter.
+var formatEur = new Intl.NumberFormat(undefined, {
+    style: 'currency',
+    currency: 'EUR',
+
+    // These options are needed to round to whole numbers if that's what you want.
+    //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+    //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+});
+
+
 
 // ROUTES
 // Explore route
@@ -90,7 +106,7 @@ router.get('/edit/:id', ensureAuth, ash(async(req,res) => {
 
 
 // HANDLING ACTIONS
-// Add handle
+// Add item handle
 router.post('/add', upload, ash(async(req, res) => {
     const data = req.body;
     const image = req.file ? req.file.filename : 'defaultItem.png';
@@ -145,7 +161,7 @@ router.post('/add', upload, ash(async(req, res) => {
     }
 }))
 
-// Edit handle
+// Edit item handle
 router.post('/edit/:id', ensureAuth, upload, async (req, res) => {
     let newData = req.body;
     let newImage = '';
@@ -185,8 +201,8 @@ router.post('/edit/:id', ensureAuth, upload, async (req, res) => {
 
 })
 
-// Delete handle
-router.get('/delete/:id', ensureAuth, upload, async (req, res) => {
+// Delete item handle
+router.get('/delete/:id', ensureAuth, async (req, res) => {
     let id = req.params.id;
 
     Item.findByIdAndRemove(id,(err, result) => {
@@ -205,6 +221,68 @@ router.get('/delete/:id', ensureAuth, upload, async (req, res) => {
         }
     });
 
+})
+
+// Add reservation handle
+router.post('/:id/reserve', ensureAuth, async (req, res) => {
+    let itemId = req.params.id;
+    let rb = req.body;
+
+    let user = await User.findById(req.user).exec();
+    console.log(user);
+
+    let item = await Item.findById(itemId).exec();
+    console.log(item);
+
+    let mailBody = `
+        <h1>New reservation</h1>
+        <p><strong>Reservation made by:</strong></p>
+        <ul>
+            <li>${user.firstName} ${user.lastName}</li>
+            <li>Email: ${user.email}</li>
+            <li>Phone: ${user.phone}</li>
+        </ul>
+        
+        <p><strong>Reserved item:</strong></p>
+        <ul>
+            <li>${item.title}</li>
+            <li>Address: ${item.address}</li>
+            <li>Price: ${formatEur.format(item.price)}/${item.pricePer}</li>
+        </ul>
+        
+        <p>Total cost:<strong>200€</strong></p>
+        
+        <p><strong>For further questions contact owner:</strong></p>
+        <ul>
+            <li>${item.ownerData.name}</li>
+            <li>Email: ${item.ownerData.email}</li>
+            <li>Phone: ${item.ownerData.phone}</li>
+        </ul>
+        
+    `;
+
+    // create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
+        host: process.env.HOST,
+        port: process.env.PORTSMTP,
+        secure: false, // true for 465, false for other ports
+        auth: {
+            user: process.env.USER, // generated ethereal user
+            pass: process.env.PASS, // generated ethereal password
+        },
+        tls: {
+            rejectUnauthorized:false
+        }
+    });
+
+    // send mail with defined transport object
+    let info = await transporter.sendMail({
+        from: 'Reservations App <nejcdev@gmail.com>', // sender address
+        to: user.email, // list of receivers
+        subject: "New reservation", // Subject line
+        text: "New reservation", // plain text body
+        html: mailBody, // html body
+    });
 })
 
 

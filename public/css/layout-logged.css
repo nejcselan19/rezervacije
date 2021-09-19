@@ -19,6 +19,25 @@
     height: 200px;
     object-fit: cover;
 }
+.card {
+    transition: 0.5s ease;
+}
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+    z-index: 999;
+}
+
+.clickable-card{
+    position: relative;
+}
+.clickable-card .click-this{
+    position: absolute;
+    width:100%;
+    height:100%;
+    top:0px;
+    left:0px;
+}
 
 body {
     background: #f3f3f3;

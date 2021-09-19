@@ -1,6 +1,16 @@
 <%
 user = typeof user !== "undefined" ? user :  {};
 item = typeof item !== "undefined" ? item : {};
+
+// Create our number formatter.
+var formatEur = new Intl.NumberFormat(undefined, {
+    style: 'currency',
+    currency: 'EUR',
+
+    // These options are needed to round to whole numbers if that's what you want.
+    //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+    //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+});
 %>
 
 <div id="mySidebar" class="sidebar">
@@ -11,25 +21,94 @@ item = typeof item !== "undefined" ? item : {};
 </div>
 
 <div id="main">
-    <div class="top-bar">
-        <div class="row h-100 align-items-end">
-            <div class="col">
-                <h5 id="heading-explore"><%= item.title %></h5>
-            </div>
-            <div class="col text-right mb-2">
-                <a href="/explore" class="btn btn-outline-danger btn-sm">Back</a>
-<!--                <button type="submit" class="btn btn-primary btn-sm">-->
-<!--                    Save-->
-<!--                </button>-->
-            </div>
-        </div>
-    </div>
-    <hr style="margin: 0px 20px;">
-    <div class="content">
+    <div class="content mt-2">
             <div class="row px-2">
                 <div class="col">
                     <%- include('../partials/messages'); %>
                 </div>
             </div>
+
+        <div class="row p-4">
+            <div class="col-content">
+                <div class="">
+                    <img src="/uploads/<%= item.image %>" alt="profile picture" width="200px">
+                </div>
+            </div>
+            <div class="col pl-4 pr-0" style="position:relative;">
+                <div class="" style="position:absolute;bottom:0;">
+                    <h4><%= item.title %></h4>
+                    <div class="row">
+                        <div class="col-12">
+                            <span class="text-secondary"><%= item.shortDesc %></span>
+                        </div>
+                    </div>
+                    <div class="row my-3">
+                        <div class="col-12">
+                            <span class="text-secondary"><%= item.longDesc %></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-md-auto">
+                            <i class="fas fa-envelope mr-2"></i>
+                            <span class="text-secondary"><%= user.email %></span>
+                        </div>
+                        <div class="col-12 col-md-auto">
+                            <i class="fas fa-phone mr-2"></i>
+                            <span class="text-secondary"><%= user.phone %></span>
+                        </div>
+                        <div class="col-12 col-md-auto">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span style="margin-left:4px;" class="text-secondary"><%= `${user.address}, ${user.postalCode} ${user.city}` %></span>
+                        </div>
+                        <div class="col-12 col-md-auto">
+                            <i class="fas fa-euro-sign mr-2"></i>
+                            <span class="text-secondary"><%= `${formatEur.format(item.price)}/${item.pricePer}` %></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+<!--        calendar-->
+        <form action="/explore/<%= item._id %>/reserve" method="post">
+            <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    class="form-control"
+                    placeholder="Enter Name"
+            />
+
+            <button type="submit" class="btn btn-primary btn-sm">
+                Reserve
+            </button>
+        </form>
+        <div id="target" class="border">
+        </div>
+        <div class="btn" id="getData">Click me</div>
+        <script>
+            $('#target').weekly_schedule({
+                fontFamily: `-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"`,
+                fontSize:"20px",
+                days: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"], // Days displayed
+                hours: "9:00AM-11:00PM", // Hours displyed
+                fontColor: "black", // Font colot used in the component
+                fontWeight: "100", // Font weight used in the component
+                hoverColor: "#727bad", // Background color when hovered
+                selectionColor: "#007bff", // Background color when selected
+                headerBackgroundColor: "transparent",
+
+            });
+            let btnGetData = document.getElementById('getData');
+            if(btnGetData){
+                btnGetData.onclick = function () {
+                    let data = $('#target').weekly_schedule("getSelectedHour");
+                    console.log(data);
+                }
+            }
+        </script>
+
+
     </div>
 </div>
