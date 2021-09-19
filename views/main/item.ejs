@@ -84,30 +84,6 @@ var formatEur = new Intl.NumberFormat(undefined, {
                 Reserve
             </button>
         </form>
-        <div id="target" class="border">
-        </div>
-        <div class="btn" id="getData">Click me</div>
-        <script>
-            $('#target').weekly_schedule({
-                fontFamily: `-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"`,
-                fontSize:"20px",
-                days: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"], // Days displayed
-                hours: "9:00AM-11:00PM", // Hours displyed
-                fontColor: "black", // Font colot used in the component
-                fontWeight: "100", // Font weight used in the component
-                hoverColor: "#727bad", // Background color when hovered
-                selectionColor: "#007bff", // Background color when selected
-                headerBackgroundColor: "transparent",
-
-            });
-            let btnGetData = document.getElementById('getData');
-            if(btnGetData){
-                btnGetData.onclick = function () {
-                    let data = $('#target').weekly_schedule("getSelectedHour");
-                    console.log(data);
-                }
-            }
-        </script>
 
 
     </div>
