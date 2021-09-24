@@ -111,11 +111,11 @@ router.post('/add', upload, ash(async(req, res) => {
     const data = req.body;
     const image = req.file ? req.file.filename : 'defaultItem.png';
     const userId = req.user;
-    const { title, shortDesc, longDesc, price, pricePer, address, category } = data;
+    const { title, shortDesc, longDesc, price, address, category } = data;
     let errors = [];
 
     // Check required fields
-    if(!title || !price || !pricePer || !category){
+    if(!title || !price || !category){
         errors.push({ msg: 'Please fill in all fields.' });
     }
 
@@ -145,7 +145,6 @@ router.post('/add', upload, ash(async(req, res) => {
             longDesc,
             image,
             price,
-            pricePer,
             address,
             category
         });
@@ -225,10 +224,14 @@ router.get('/delete/:id', ensureAuth, async (req, res) => {
 
 // Add reservation handle
 router.post('/:id/reserve', ensureAuth, async (req, res) => {
+    let userId = req.user;
     let itemId = req.params.id;
     let rb = req.body;
 
-    let user = await User.findById(req.user).exec();
+    console.log('---------------------------------');
+    console.log(rb);
+
+    let user = await User.findById(userId).exec();
     console.log(user);
 
     let item = await Item.findById(itemId).exec();
@@ -247,7 +250,7 @@ router.post('/:id/reserve', ensureAuth, async (req, res) => {
         <ul>
             <li>${item.title}</li>
             <li>Address: ${item.address}</li>
-            <li>Price: ${formatEur.format(item.price)}/${item.pricePer}</li>
+            <li>Price: ${formatEur.format(item.price)}/h</li>
         </ul>
         
         <p>Total cost:<strong>200€</strong></p>
@@ -262,27 +265,27 @@ router.post('/:id/reserve', ensureAuth, async (req, res) => {
     `;
 
     // create reusable transporter object using the default SMTP transport
-    let transporter = nodemailer.createTransport({
-        host: process.env.HOST,
-        port: process.env.PORTSMTP,
-        secure: false, // true for 465, false for other ports
-        auth: {
-            user: process.env.USER, // generated ethereal user
-            pass: process.env.PASS, // generated ethereal password
-        },
-        tls: {
-            rejectUnauthorized:false
-        }
-    });
+    // let transporter = nodemailer.createTransport({
+    //     host: process.env.HOST,
+    //     port: process.env.PORTSMTP,
+    //     secure: false, // true for 465, false for other ports
+    //     auth: {
+    //         user: process.env.USER, // generated ethereal user
+    //         pass: process.env.PASS, // generated ethereal password
+    //     },
+    //     tls: {
+    //         rejectUnauthorized:false
+    //     }
+    // });
 
     // send mail with defined transport object
-    let info = await transporter.sendMail({
-        from: 'Reservations App <nejcdev@gmail.com>', // sender address
-        to: user.email, // list of receivers
-        subject: "New reservation", // Subject line
-        text: "New reservation", // plain text body
-        html: mailBody, // html body
-    });
+    // let info = await transporter.sendMail({
+    //     from: 'Reservations App <nejcdev@gmail.com>', // sender address
+    //     to: user.email, // list of receivers
+    //     subject: "New reservation", // Subject line
+    //     text: "New reservation", // plain text body
+    //     html: mailBody, // html body
+    // });
 })
 
 

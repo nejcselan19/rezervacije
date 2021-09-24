@@ -166,31 +166,6 @@ item = typeof item !== "undefined" ? item : {};
                                 />
                             </div>
                         </div>
-                        <div class="col-12 col-md-6">
-                            <div class="form-group">
-                                <label for="pricePer">Price per</label>
-                                <select class="custom-select form-control" id="pricePer" name="pricePer" value="<%= item.pricePer || 'h' %>">
-                                    <%
-                                    const allOptionsPricePer = {
-                                        'h': "hour",
-                                        'd': "day"
-                                    }
-
-                                    const renderOptionsPricePer = Object.keys(allOptionsPricePer).map(x => {
-                                        if(x === item.pricePer){
-                                            return `<option selected value="${x}">${allOptionsPricePer[x]}</option>`;
-                                        } else {
-                                            return `<option value="${x}">${allOptionsPricePer[x]}</option>`;
-                                        }
-                                    });
-
-                                    for(let i = 0; i < renderOptionsPricePer.length; i++){
-                                    %>
-                                        <%- renderOptionsPricePer[i] %>
-                                    <% } %>
-                                </select>
-                            </div>
-                        </div>
                     </div>
                     <!-- Address-->
                     <div class="row">

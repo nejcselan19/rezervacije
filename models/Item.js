@@ -28,11 +28,6 @@ const ItemSchema = new mongoose.Schema({
         min: [0, 'Price must be 0 or higher'],
         required: [true, 'Price required'],
     },
-    pricePer: {
-        type: String,
-        required: [true, 'Unit required'],
-        enum: ['h', 'd']
-    },
     category: {
         type: String,
         required: [true, 'Category is required'],

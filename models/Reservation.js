@@ -9,24 +9,21 @@ const reservationSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    timeslots: [{
-        reservedFrom: {
-            type: Date,
-            required: true
-        },
-        reservedTo: {
-            type: Date,
-            required: true
-        }
-    }],
-    totalCost: {
+    ownerId: {
+      type: String,
+      required: true
+    },
+    day: {
         type: Number,
         required: true
     },
-    status: {
-        type: String,
-        required: true,
-        enum: ['active', 'cancelled']
+    hours: {
+        type: Number,
+        required: true
+    },
+    totalCost: {
+        type: Number,
+        required: true
     }
 }, { timestamps: true });
 
