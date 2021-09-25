@@ -18,7 +18,7 @@ const reservationSchema = new mongoose.Schema({
         required: true
     },
     hours: {
-        type: Number,
+        type: [Number],
         required: true
     },
     totalCost: {

@@ -3,5 +3,25 @@
 }
 
 body {
-    background-color: #007bff;
+    background-color: #00a0ac;
 }
+
+
+.btn-primary {
+    color: #fff;
+    background-color: #00a0ac;
+    border-color: #00a0ac;
+}
+.btn-primary:hover {
+    color: #fff;
+    background-color: #ADCD30;
+    border-color: #ADCD30;
+}
+
+a {
+    color: #00a0ac;
+}
+
+a:hover {
+     color: #ADCD30;
+ }

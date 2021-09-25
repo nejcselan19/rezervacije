@@ -1,6 +1,7 @@
 <%
 user = typeof user !== "undefined" ? user :  {};
 item = typeof item !== "undefined" ? item : {};
+existingResrv = typeof  existingResrv !== "undefined" ? existingResrv : {};
 
 // Create our number formatter.
 var formatEur = new Intl.NumberFormat(undefined, {
@@ -76,7 +77,7 @@ var formatEur = new Intl.NumberFormat(undefined, {
 
             <!-- Set owner id -->
             <input
-                    type="text"
+                    type="hidden"
                     id="ownerId"
                     name="ownerId"
                     value="<%= item.ownerId %>"
@@ -103,9 +104,18 @@ var formatEur = new Intl.NumberFormat(undefined, {
                 </tbody>
             </table>
 
-            <button id="resrvSubmitBtn" type="submit" class="btn btn-primary btn-sm">
-                Reserve
-            </button>
+            <div class="row">
+                <div class="col-auto">
+                    <div id="resrvInfo">
+                    </div>
+
+                </div>
+                <div class="col">
+                    <button id="resrvSubmitBtn" type="submit" class="btn btn-primary btn-sm">
+                        Confirm
+                    </button>
+                </div>
+            </div>
         </form>
 
 
@@ -113,111 +123,112 @@ var formatEur = new Intl.NumberFormat(undefined, {
 </div>
 
 <script>
+    // get items data
+    let item = JSON.parse('<%- JSON.stringify(item) %>');
+
+    // first set button to disabled
+    $('#resrvSubmitBtn').hide();
     // Reservations logic
     let slots = [];
     function parseDataToHiddenForm() {
         let bookedSlots = slots.filter(x => x.data( "booked")).map(x => x.data( "time"));
 
-        console.log(bookedSlots);
 
-        let bookedByDay = bookedSlots.reduce((reservations, slot) => {
+        if(bookedSlots.length > 0){
+            let bookedByDay = bookedSlots.reduce((reservations, slot) => {
 
-            let foundDay = reservations.find((findSlot) => slot.day === findSlot.day);
+                let foundDay = reservations.find((findSlot) => slot.day === findSlot.day);
 
-            if (!foundDay) {
-                console.log('NOPE')
-                reservations.push({ day: slot.day, hours: [slot.hour]})
-            } else {
-                console.log('YES SIR')
-                foundDay.hours = foundDay.hours.concat(slot.hour);
-            }
-            return reservations;
-        }, []);
-
-        let actualReservations = [];
-        for(let i = 0; i < bookedByDay.length; i++){
-            let dayData = bookedByDay[i];
-
-            let allHoursInString = dayData.hours.reduce((acc, h) => {
-                let lastHour = parseInt(acc.split('|').pop().split(',').pop())
-
-                if(lastHour + 1 === h){
-                    acc += ',' + h;
+                if (!foundDay) {
+                    reservations.push({ day: slot.day, hours: [slot.hour]})
                 } else {
-                    acc += '|' + h;
+                    foundDay.hours = foundDay.hours.concat(slot.hour);
+                }
+                return reservations;
+            }, []);
+
+            let actualReservations = [];
+            for(let i = 0; i < bookedByDay.length; i++){
+                let dayData = bookedByDay[i];
+
+                let allHoursInString = dayData.hours.reduce((acc, h) => {
+                    let lastHour = parseInt(acc.split('|').pop().split(',').pop())
+
+                    if(lastHour + 1 === h){
+                        acc += ',' + h;
+                    } else {
+                        acc += '|' + h;
+                    }
+
+                    return acc;
+                }, '');
+
+                let allConsecutiveHours = [];
+                let reservationsInDay = allHoursInString.split('|')
+                for(let i = 0; i < reservationsInDay.length; i++){
+                    let consecutiveHours = reservationsInDay[i];
+
+                    if(consecutiveHours.length > 0){
+                        let allHours = consecutiveHours.split(',');
+                        allHours = allHours.map(hour => parseInt(hour));
+                        allConsecutiveHours.push(allHours);
+                    }
                 }
 
-                return acc;
-            }, '');
+                allConsecutiveHours.forEach((hours) => {
+                    let totalCost = hours.length * item.price;
+                    actualReservations.push({ day: dayData.day, hours: hours, totalCost });
+                });
 
-            let allConsecutiveHours = [];
-
-            let reservationsInDay = allHoursInString.split('|')
-            for(let i = 0; i < reservationsInDay.length; i++){
-                let consecutiveHours = reservationsInDay[i];
-
-                if(consecutiveHours.length > 0){
-                    let allHours = consecutiveHours.split(',');
-                    allHours = allHours.map(hour => parseInt(hour));
-                    allConsecutiveHours.push(allHours);
-                }
             }
+            console.log('REDUCE -> ', actualReservations);
 
 
-            allConsecutiveHours.forEach((hours) => {
-                actualReservations.push({ day: dayData.day, hours: hours});
-            });
+            // first empty all previously made elements indside hidden inputs div, if there are any
+            $('#hidden-fields').empty();
 
-        }
-        console.log('REDUCE -> ', actualReservations);
-
-        // get items data
-        let item = JSON.parse('<%- JSON.stringify(item) %>');
-
-        // first empty all previously made elements indside hidden inputs div, if there are any
-        $('#hidden-fields').empty();
-
-        // Loop over all the actual reservations, and add input fields to form
-        for(let i = 0; i < actualReservations.length; i++){
-            let resrvData = actualReservations[i];
-
+            // Save actualReservation
             let dInput = $('<input>').attr({
-                type: 'number',
-                id: `day[${i}]`,
-                name: `day[${i}]`
-            })
-            dInput.val(resrvData.day);
+                type: 'hidden',
+                id: `resrvData`,
+                name: `resrvData`
+            });
+            dInput.val(JSON.stringify(actualReservations));
             dInput.appendTo('#hidden-fields');
 
-            for(let j = 0; j < resrvData.hours.length; j++){
-                console.log('Tako zgledajo ure ------- ',resrvData.hours)
-                let hInput = $('<input>').attr({
-                    type: 'number',
-                    id: `hours[${i}][${j}]`,
-                    name: `hours[${i}][${j}]`
-                })
-                hInput.val(resrvData.hours[j]);
-                hInput.appendTo('#hidden-fields');
+
+
+            // show info on reservations
+            const dayMapper = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+            let parentDiv = $('#resrvInfo');
+            parentDiv.empty();
+            let h6 = $('<h6>').html(`<strong>Number of reservations: ${actualReservations.length}</strong>`);
+            parentDiv.append(h6);
+            for(let i = 0; i < actualReservations.length; i++){
+                let r = actualReservations[i];
+                let d = dayMapper[r.day - 1];
+                let startH = r.hours[0];
+                let endH = r.hours[r.hours.length - 1] + 1;
+
+                let p = $('<p>').html(`On <strong>${d}</strong>, from <strong>${startH}:00</strong> till <strong>${endH}:00</strong>.`);
+                p.css({margin: 0});
+                parentDiv.append(p);
             }
 
-            let tCInput = $('<input>').attr({
-                type: 'number',
-                id: `totalCost[${i}]`,
-                name: `totalCost[${i}]`
-            })
-            // set total cost
-            let totalCost = 0;
-            totalCost = resrvData.hours.length * item.price;
-            tCInput.val(totalCost);
-            tCInput.appendTo('#hidden-fields');
+            // enable Reserve confirmation button
+            $('#resrvSubmitBtn').show();
+        } else {
+            let parentDiv = $('#resrvInfo');
+            parentDiv.empty();
+            // disable Reserve confirmation button
+            $('#resrvSubmitBtn').hide();
         }
     }
 
     // dummy data for testing end developing 2 - trying different schema
-    let existingData2 = [
-        { day: 2, hours: [12,15,18,19,20], ownerId: '1234' },
-        { day: 1, hours: [8,9], ownerId: '1234' }
-    ];
+
+    let existingResrv = JSON.parse('<%- JSON.stringify(existingResrv) %>');
+    let user = JSON.parse('<%- JSON.stringify(user) %>');
 
     // Make table with clickable table cells
     let table = $("#reservations-table");
@@ -226,8 +237,7 @@ var formatEur = new Intl.NumberFormat(undefined, {
         for (let day = 0; day < 8; day++) {
             if(day === 0){
                 let td = $('<td>');
-                td.css({ cursor: "pointer" });
-                td.css({ "background-color": "#007bff", color: "white" });
+                td.css({ "background-color": "#00a0ac", color: "white" });
                 td.text((hour) + ':00');
                 tr.append(td)
             } else {
@@ -237,30 +247,35 @@ var formatEur = new Intl.NumberFormat(undefined, {
 
                 // Booked logic
                 let isFree = true;
-                if(existingData2.find(r => {
+                let isMy = false;
+                let sameTimeResrv = existingResrv.find(r => {
                     return r.day === day && r.hours.includes(hour);
-                })){
+                });
+                if(sameTimeResrv){
                     isFree = false;
+                }
+                if(sameTimeResrv && sameTimeResrv.userId === user._id){
+                    isMy = true;
                 }
 
                 if (isFree) {
                     // enable click
+                    td.addClass('hooverable');
                     td.css({ cursor: "pointer" });
                     td.click(function() {
                         td.data( "booked", !td.data( "booked"));
                         td.css({
-                            background: td.data( "booked") ? "#8bc98b" : "transparent",
-                            color: "#527352"
+                            background: td.data( "booked") ? "#adcd30" : "transparent",
+                            color: "#465411"
                         });
-                        td.text(td.data("booked") ? "Reserved" : "");
+                        td.text(td.data("booked") ? "Reserve" : "");
 
                         parseDataToHiddenForm();
                     });
                 } else {
                     // user can't click
-                    td.css({ background: "#ccc",
-                        color: "#777" });
-                    td.text('Not avaliable');
+                    td.css(isMy ? { background: "rgb(0,160,172)", color: "#004346" } : { background: "#ccc", color: "#777" });
+                    td.text(isMy ? user.firstName + ' ' + user.lastName : 'Not avaliable');
                 }
                 tr.append(td);
             }

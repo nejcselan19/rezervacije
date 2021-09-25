@@ -1,13 +1,33 @@
 /* Profile picture in navbar */
 .profile-pic-circle {
     border-radius: 50%;
-    background-color: #007bff;
+    background-color: #00a0ac;
 
     /*background-repeat: no-repeat;*/
     /*background-position: center center;*/
 }
 
 /* Main classes */
+
+a {
+    color: #00a0ac;
+}
+
+a:hover {
+    color: #ADCD30;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #00a0ac;
+  border-color: #00a0ac;
+}
+.btn-primary:hover {
+     color: #fff;
+     background-color: #ADCD30;
+     border-color: #ADCD30;
+ }
+
 .horizontal-scroll {
     overflow-x: auto;
     overflow-y: hidden;
@@ -72,7 +92,7 @@ body {
     table-layout: fixed;
 }
 .styled-table thead tr {
-    background-color: #007bff;
+    background-color: #00a0ac;
     color: #ffffff;
     text-align: center;
 }
@@ -84,7 +104,6 @@ body {
     padding: 0px 0px;
 }
 
-
 .styled-table tbody tr {
     border-bottom: 1px solid #dddddd;
 }
@@ -94,15 +113,22 @@ body {
 }
 
 .styled-table tbody tr:last-of-type {
-    border-bottom: 2px solid #007bff;
+    border-bottom: 2px solid #00a0ac;
 }
 
 .styled-table tbody tr.active-row {
     font-weight: bold;
-    color: #007bff;
+    color: #00a0ac;
 }
-
-
+#reservations-table .hooverable:hover {
+    /*border-color: #ADCD30 !important;*/
+    /*border-style: solid;*/
+    /*border-width: 1px;*/
+    background-color: rgba(173, 205, 48, 0.45) !important;
+}
+/*#reservations-table td:hover {*/
+/*    background-color: #adcd30 !important;*/
+/*}*/
 
 /* Dialog classes */
 /* The Modal (background) */

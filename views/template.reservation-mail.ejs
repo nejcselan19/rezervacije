@@ -1,0 +1,288 @@
+<%
+var formatEur = new Intl.NumberFormat(undefined, {
+style: 'currency',
+currency: 'EUR',
+});
+
+const dayMapper = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+%>
+
+<!doctype html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Exo+2:200,300,400,700&amp;subset=cyrillic,latin-ext"
+          rel="stylesheet">
+    <style>
+        @media all {
+            .ExternalClass {
+                width: 100%;
+            }
+
+            .ExternalClass,
+            .ExternalClass p,
+            .ExternalClass span,
+            .ExternalClass font,
+            .ExternalClass td,
+            .ExternalClass div {
+                line-height: 100%;
+            }
+
+            .apple-link a {
+                color: inherit !important;
+                font-family: inherit !important;
+                font-size: inherit !important;
+                font-weight: inherit !important;
+                line-height: inherit !important;
+                text-decoration: none !important;
+            }
+
+            .btn-primary table td:hover {
+                background-color: #00a0ac !important;
+            }
+
+            .btn-primary a:hover {
+                background-color: #00a0ac !important;
+                border-color: #00a0ac !important;
+            }
+
+            * {
+                box-sizing: border-box;
+                -moz-box-sizing: border-box;
+            }
+
+            body {
+                background-color: #f4f4f4;
+                font-family: 'Exo 2', sans-serif;
+                -webkit-font-smoothing: antialiased;
+                font-size: 12pt;
+                line-height: 1.4;
+                margin: 0;
+                padding: 0;
+                -ms-text-size-adjust: 100%;
+                -webkit-text-size-adjust: 100%;
+                font-weight: 200;
+            }
+
+            .header img {
+                max-width: 300px !important;
+                max-height: 70px !important;
+            }
+
+            .companyInfo {
+                color: gray;
+                font-size: 8px;
+            }
+
+            .footer {
+                width: 100%;
+                color: gray;
+                font-size: 8px;
+            }
+
+            .container {
+                max-width: 21cm;
+                min-height: 21cm;
+                padding: 2cm 2cm 1cm 2cm;
+                margin: 1cm auto;
+                border-radius: 5px;
+                position: relative;
+                background-color: #f4f4f4;
+            }
+
+            .mail {
+                padding: 2cm;
+                background-color: #ffffff;
+                border-radius: 5px;
+                width: 100%;
+                text-align: center;
+                font-weight: 300;
+                color: #000;
+            }
+
+            .text-center {
+                text-align: center;
+                font-weight: 300;
+            }
+
+            .line {
+                background-color: #f4f4f4;
+                width: 110%;
+                margin-left: -5%;
+                height: 2px;
+                margin-top: 40px;
+                margin-bottom: 10px;
+            }
+
+            .content h1 {
+                font-weight: 200;
+            }
+
+            .button {
+                width: 200px;
+                height: 50px;
+                border-radius: 5px;
+                color: #ffffff;
+                background-color: #00a0ac;
+                font-size: 15px;
+                font-weight: normal;
+                margin-top: 40px;
+                margin: auto;
+                margin-top: 5px;
+                padding-top: 1px;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+            .button a {
+                text-decoration: none;
+                color: #ffffff;
+            }
+
+            .bottom {
+                margin-top: 5%;
+            }
+
+            .bottom p {
+                color: #c1c1c1;
+                font-weight: medium;
+                text-align: center;
+                font-size: 12px;
+            }
+
+            .bottom p a {
+                text-decoration: none;
+                color: #c1c1c1;
+            }
+        }
+
+        @media only screen and (max-width: 500px) {
+            .header img {
+                margin-top: 15px !important;
+                margin-bottom: -25px !important;
+                max-width: 200px !important;
+                max-height: 50px !important;
+            }
+
+            .content h1 {
+                width: 140px;
+                font-size: 25px;
+                text-align: center;
+                margin: auto;
+            }
+
+            .content .button {
+                width: 170px !important;
+            }
+
+            .container {
+                padding: 15px !important;
+            }
+
+            .mail {
+                padding: 15px !important;
+            }
+
+            .line {
+                margin-left: 5% !important;
+                width: 90% !important;
+            }
+        }
+
+        @media only screen and (max-width: 440px) {
+            body {
+                font-size: 10pt !important;
+            }
+
+            .header img {
+                max-width: 80px !important;
+                max-height: 50px !important;
+            }
+
+            .content h1 {
+                width: 110px;
+                font-size: 19px;
+                text-align: center;
+                margin: auto;
+            }
+
+            .content .button {
+                width: 100px !important;
+                font-size: 12px !important;
+            }
+
+            .content .button p {
+                margin-top: 6px !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="">
+<div class="container">
+    <div class="mail text-center">
+        <div class="header">
+            <img src="https://i.imgur.com/dpk7dCw.png"
+                 alt="reservations logo">
+            <div class="line">
+            </div><br>
+        </div>
+        <div class="content" style="">
+            <h2>Thank you for using Reservations!</h2>
+
+            <br>
+            <p>Hello <%= user.firstName %>,</p>
+            <p>You have successfully reserved <b><%= item.title %></b>, <%= item.address %></p><br>
+
+            <br>
+            <strong><h2>Reservations</h2></strong>
+            <%
+                let totalCost = 0;
+            for(let i = 0; i < allReservations.length; i++) {
+                let r = allReservations[i];
+                totalCost += r.totalCost;
+                let d = dayMapper[r.day - 1];
+                let startH = r.hours[0];
+                let endH = r.hours[r.hours.length - 1] + 1;
+            %>
+                <p><%= d %>, <%= startH %>:00 - <%= endH %>:00, cost: <%= formatEur.format(r.totalCost) %></p>
+            <% } %>
+
+            <br>
+            <strong><h2>Total cost:</h2></strong>
+            <p><%= formatEur.format(totalCost) %></p>
+
+            <br>
+            <p>If you want to check your other reservation, you can do that by clicking the button below.</p>
+
+            <br>
+            <div class="button">
+                <a href="http://localhost:3000/users/profile">
+                    <p>View all reservations</p>
+                </a>
+            </div>
+            <br>
+
+            <p>For further questions contact <strong><%= item.ownerData.name%></strong>
+                on <a href="mailto:<%= item.ownerData.email%>"><%= item.ownerData.email%></a>
+                or by phone on <a href="tel:<%= item.ownerData.phone%>"><%= item.ownerData.phone%></a></p>
+
+            <br>
+            <p>Greetings,</p>
+            <p>Reservations team</p>
+            <div class="line">
+            </div><br>
+            <div class="footer">
+                <p>
+                    Powered by <a href="http://localhost:3000/" target="_blank">Reservations</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+
+</html>

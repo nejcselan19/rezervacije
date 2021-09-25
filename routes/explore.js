@@ -4,10 +4,12 @@ const ash = require('express-async-handler')
 const fs = require('fs');
 require('dotenv').config();
 const nodemailer = require('nodemailer');
+var ejs = require("ejs");
 
 // Item model
 const Item = require('../models/Item');
 const User = require('../models/User');
+const Reservation = require('../models/Reservation');
 const { ensureAuth } = require("../config/auth");
 
 const multer = require("multer");
@@ -73,13 +75,19 @@ router.get('/:id', ensureAuth, ash(async(req,res) => {
         _id: req.params.id
     })
 
+    const existingResrv = await Reservation.find({
+        itemId: req.params.id
+    })
+    console.log(existingResrv);
+
     if(!item){
         return res.render('errors/404')
     }
 
     res.render('main/item', {
         item,
-        user: req.user
+        user: req.user,
+        existingResrv
     })
 
 }));
@@ -224,11 +232,11 @@ router.get('/delete/:id', ensureAuth, async (req, res) => {
 
 // Add reservation handle
 router.post('/:id/reserve', ensureAuth, async (req, res) => {
-    let userId = req.user;
+    let userId = req.user._id;
     let itemId = req.params.id;
     let rb = req.body;
+    rb.resrvData = JSON.parse(rb.resrvData);
 
-    console.log('---------------------------------');
     console.log(rb);
 
     let user = await User.findById(userId).exec();
@@ -237,55 +245,88 @@ router.post('/:id/reserve', ensureAuth, async (req, res) => {
     let item = await Item.findById(itemId).exec();
     console.log(item);
 
-    let mailBody = `
-        <h1>New reservation</h1>
-        <p><strong>Reservation made by:</strong></p>
-        <ul>
-            <li>${user.firstName} ${user.lastName}</li>
-            <li>Email: ${user.email}</li>
-            <li>Phone: ${user.phone}</li>
-        </ul>
-        
-        <p><strong>Reserved item:</strong></p>
-        <ul>
-            <li>${item.title}</li>
-            <li>Address: ${item.address}</li>
-            <li>Price: ${formatEur.format(item.price)}/h</li>
-        </ul>
-        
-        <p>Total cost:<strong>200€</strong></p>
-        
-        <p><strong>For further questions contact owner:</strong></p>
-        <ul>
-            <li>${item.ownerData.name}</li>
-            <li>Email: ${item.ownerData.email}</li>
-            <li>Phone: ${item.ownerData.phone}</li>
-        </ul>
-        
-    `;
+    // check if reservation is valid - possible same time reservation TODO
+    // Validation passed
+    let allReservations = [];
+
+    rb.resrvData.forEach(r => {
+        console.log('R -> ', r);
+        console.log('UserID -> ', userId);
+        console.log('itemId -> ', itemId);
+        console.log('r.hours -> ', r.hours);
+        allReservations.push({
+            userId,
+            itemId,
+            ownerId: rb.ownerId,
+            day: r.day,
+            hours: r.hours,
+            totalCost: r.totalCost
+        })
+    })
+
+    Reservation.collection.insertMany(allReservations,(err,docs) => {
+        if(err){
+            return console.error(err);
+        } else {
+            console.log('Mulitple documents inserted: ', docs);
+            req.flash('success_msg', 'Item added');
+            res.redirect('/explore');
+        }
+    })
 
     // create reusable transporter object using the default SMTP transport
-    // let transporter = nodemailer.createTransport({
-    //     host: process.env.HOST,
-    //     port: process.env.PORTSMTP,
-    //     secure: false, // true for 465, false for other ports
-    //     auth: {
-    //         user: process.env.USER, // generated ethereal user
-    //         pass: process.env.PASS, // generated ethereal password
-    //     },
-    //     tls: {
-    //         rejectUnauthorized:false
-    //     }
-    // });
+    let transporter = nodemailer.createTransport({
+        host: process.env.HOST,
+        port: process.env.PORTSMTP,
+        secure: false, // true for 465, false for other ports
+        auth: {
+            user: process.env.USER, // generated ethereal user
+            pass: process.env.PASS, // generated ethereal password
+        },
+        tls: {
+            rejectUnauthorized:false
+        }
+    });
 
-    // send mail with defined transport object
-    // let info = await transporter.sendMail({
-    //     from: 'Reservations App <nejcdev@gmail.com>', // sender address
-    //     to: user.email, // list of receivers
-    //     subject: "New reservation", // Subject line
-    //     text: "New reservation", // plain text body
-    //     html: mailBody, // html body
-    // });
+    ejs.renderFile("./views/template.reservation-mail.ejs", { user, item, allReservations }, function (err, template) {
+        if (err) {
+            console.log(err);
+        } else {
+            let mainOptions = {
+                from: 'Reservations App <nejcdev@gmail.com>',
+                to: user.email,
+                subject: "Reservation successful",
+                html: template
+            };
+            transporter.sendMail(mainOptions, function (err, info) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log('Message sent: ' + info.response);
+                }
+            });
+        }
+    });
+
+    ejs.renderFile("./views/template.notify-mail.ejs", { user, item, allReservations }, function (err, template) {
+        if (err) {
+            console.log(err);
+        } else {
+            let mainOptions = {
+                from: 'Reservations App <nejcdev@gmail.com>',
+                to: item.ownerData.email,
+                subject: "New reservation",
+                html: template
+            };
+            transporter.sendMail(mainOptions, function (err, info) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log('Message sent: ' + info.response);
+                }
+            });
+        }
+    });
 })
 
 
