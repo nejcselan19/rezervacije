@@ -51,7 +51,7 @@ item = typeof item !== "undefined" ? item : {};
             <div class="row px-2">
                 <div class="col-content">
                     <div style="position: relative;">
-                        <img id="itemImage2" src="/uploads/<%= item.image || '' %>" alt="item image" width="200px" style="position: relative;">
+                        <img id="itemImage2" src="<%= item.image || '' %>" alt="item image" width="200px" style="position: relative;">
                         <div class="change-pic-button cursor-pointer">
                             <span id="itemImageBtn">Change image</span>
                             <input id="imageUpload" name="itemPicture" type="file" style="display: none;">

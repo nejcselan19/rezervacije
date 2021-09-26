@@ -51,7 +51,7 @@ var formatEur = new Intl.NumberFormat(undefined, {
                 <div class="col-3 p-0 pr-3">
                     <div class="card card-block">
                         <div class="card-img-top clickable-card">
-                            <img class="" src="/uploads/<%= item.image || 'defaultItem.png' %>" alt="items image">
+                            <img class="" src="<%= item.image || 'defaultItem.png' %>" alt="items image">
                             <a href="/explore/<%= item.id %>" class="border click-this"></a>
                         </div>
                         <div class="card-body clickable-card">
@@ -99,7 +99,7 @@ var formatEur = new Intl.NumberFormat(undefined, {
                 %>
                     <div class="col-3 p-0 pr-3">
                         <div class="card card-block clickable-card">
-                            <img class="card-img-top" src="/uploads/<%= item.image || 'defaultItem.png' %>" alt="items image">
+                            <img class="card-img-top" src="<%= item.image || 'defaultItem.png' %>" alt="items image">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-7">

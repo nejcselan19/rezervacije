@@ -2,7 +2,10 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
+
 const fs = require('fs');
+const util = require('util');
+const unlinkFile = util.promisify(fs.unlink);
 
 // User model
 const User = require('../models/User');
@@ -12,6 +15,7 @@ const { ensureAuth } = require("../config/auth");
 
 const multer = require("multer");
 const path = require("path");
+const {uploadFile} = require("../s3");
 
 // upload stuff
 // Set storage engine - Multer
@@ -92,22 +96,14 @@ router.get('/edit/:id', ensureAuth, async (req, res) => {
 // @route POST /users/edit/:id
 router.post('/edit/:id', ensureAuth, upload, async (req, res) => {
     let newData = req.body;
-    let newImage = '';
+    let file = req.file;
 
-    if(req.file){
-        newImage = req.file.filename;
-        if(req.body.old_image !== 'defaultProfile.png'){
-            try {
-                fs.unlinkSync(`./public/uploads/${req.body.old_image}`);
-            } catch (err){
-                console.log(err);
-            }
-        }
-    } else {
-        newImage = req.body.old_image;
-    }
+    const result = await uploadFile(file);
+    await unlinkFile(file.path);
+    const image = `/images/${result.key}`;
+
     // add image name to body data
-    newData.profilePic = newImage;
+    newData.profilePic = image;
 
     let user = await User.findById(req.params.id).lean();
 

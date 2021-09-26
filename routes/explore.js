@@ -1,7 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const ash = require('express-async-handler')
+
 const fs = require('fs');
+const util = require('util');
+const unlinkFile = util.promisify(fs.unlink);
+
 require('dotenv').config();
 const nodemailer = require('nodemailer');
 var ejs = require("ejs");
@@ -12,8 +16,12 @@ const User = require('../models/User');
 const Reservation = require('../models/Reservation');
 const { ensureAuth } = require("../config/auth");
 
+// multer
 const multer = require("multer");
 const path = require("path");
+
+// s3
+const { uploadFile } = require('../s3');
 
 // upload stuff
 // Set storage engine - Multer
@@ -116,9 +124,15 @@ router.get('/edit/:id', ensureAuth, ash(async(req,res) => {
 // Add item handle
 router.post('/add', upload, ash(async(req, res) => {
     const data = req.body;
-    const image = req.file ? req.file.filename : 'defaultItem.png';
+    const file = req.file;
+    //const image = req.file ? req.file.filename : 'defaultItem.png';
     const userId = req.user;
     const { title, shortDesc, longDesc, price, address, category } = data;
+
+    const result = await uploadFile(file);
+    await unlinkFile(file.path);
+    const image = `/images/${result.key}`;
+
     let errors = [];
 
     // Check required fields
@@ -168,22 +182,14 @@ router.post('/add', upload, ash(async(req, res) => {
 // Edit item handle
 router.post('/edit/:id', ensureAuth, upload, async (req, res) => {
     let newData = req.body;
-    let newImage = '';
+    let file = req.file;
 
-    if(req.file){
-        newImage = req.file.filename;
-        if(req.body.old_image !== 'defaultItem.png'){
-            try {
-                fs.unlinkSync(`./public/uploads/${req.body.old_image}`);
-            } catch (err){
-                console.log(err);
-            }
-        }
-    } else {
-        newImage = req.body.old_image;
-    }
+    const result = await uploadFile(file);
+    await unlinkFile(file.path);
+    const image = `/images/${result.key}`;
+
     // add image name to body data
-    newData.image = newImage;
+    newData.image = image;
 
     let item = await Item.findById(req.params.id).lean();
 

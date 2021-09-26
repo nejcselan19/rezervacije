@@ -29,7 +29,7 @@ const pageTitle = typeof _pageTitle != "undefined" ? _pageTitle : 'Reservations 
 <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
 
         <a class="navbar-brand" href="/">
-            <img src="/uploads/logo.png" width="150px" class="d-inline-block align-top" alt="">
+            <img src="/images/logo.png" width="150px" class="d-inline-block align-top" alt="">
         </a>
         <div class="collapse justify-content-center navbar-collapse">
             <ul class="navbar-nav">
@@ -45,7 +45,7 @@ const pageTitle = typeof _pageTitle != "undefined" ? _pageTitle : 'Reservations 
         <div class="dropdown">
             <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img class="profile-pic-circle d-inline mr-1"
-                     src="<%= '/uploads/' + user.profilePic || 'https://media.geeksforgeeks.org/wp-content/uploads/20200630132503/iflag.jpg' %>"
+                     src="<%= user.profilePic || 'https://media.geeksforgeeks.org/wp-content/uploads/20200630132503/iflag.jpg' %>"
                      width="30" height="30">
                 <%= user.firstName + ' ' + user.lastName %>
             </button>

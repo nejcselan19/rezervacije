@@ -15,7 +15,7 @@
     <div class="row p-4">
         <div class="col-content">
             <div class="">
-                <img src="../uploads/<%= user.profilePic %>" alt="profile picture" width="200px">
+                <img src="<%= user.profilePic %>" alt="profile picture" width="200px">
             </div>
         </div>
         <div class="col pl-4 pr-0" style="position:relative;">
@@ -53,7 +53,7 @@
         <div class="col-3 p-0 pr-3">
             <div class="card card-block">
                 <div class="card-img-top clickable-card">
-                    <img class="" src="/uploads/<%= item.image || 'defaultItem.png' %>" alt="items image">
+                    <img class="" src="<%= item.image || 'defaultItem.png' %>" alt="items image">
                     <a href="/explore/<%= item.id %>" class="border click-this"></a>
                 </div>
                 <div class="card-body clickable-card">
@@ -93,7 +93,7 @@
         <div class="col-3 p-0 pr-3">
             <div class="card card-block">
                 <div class="card-img-top clickable-card">
-                    <img class="" src="/uploads/<%= item.data.image || 'defaultItem.png' %>" alt="items image">
+                    <img class="" src="<%= item.data.image || 'defaultItem.png' %>" alt="items image">
                     <a href="/explore/<%= item.itemId %>" class="border click-this"></a>
                 </div>
                 <div class="card-body clickable-card">

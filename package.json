@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/nejcselan19/rezervacije#readme",
   "dependencies": {
+    "aws-sdk": "^2.995.0",
     "bcryptjs": "^2.4.3",
     "connect-flash": "^0.1.1",
     "dotenv": "^10.0.0",
