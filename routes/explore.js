@@ -78,7 +78,6 @@ router.get('/:id', ensureAuth, ash(async(req,res) => {
     const existingResrv = await Reservation.find({
         itemId: req.params.id
     })
-    console.log(existingResrv);
 
     if(!item){
         return res.render('errors/404')
@@ -131,8 +130,6 @@ router.post('/add', upload, ash(async(req, res) => {
         data.errors = errors;
         data.image = image;
         const allItems = await Item.find();
-        console.log('Grem v bazo po podatke.');
-        console.log('Podatki: ', { ...data });
         res.render('main/explore', { ...data, errors, user: req.user, items: allItems, openDialog: 'add-dialog' });
     } else {
         const owner = await User.findOne({
@@ -232,28 +229,20 @@ router.get('/delete/:id', ensureAuth, async (req, res) => {
 
 // Add reservation handle
 router.post('/:id/reserve', ensureAuth, async (req, res) => {
-    let userId = req.user._id;
+    let userId = req.user._id.toString();
     let itemId = req.params.id;
     let rb = req.body;
     rb.resrvData = JSON.parse(rb.resrvData);
 
-    console.log(rb);
-
     let user = await User.findById(userId).exec();
-    console.log(user);
 
     let item = await Item.findById(itemId).exec();
-    console.log(item);
 
     // check if reservation is valid - possible same time reservation TODO
     // Validation passed
     let allReservations = [];
 
     rb.resrvData.forEach(r => {
-        console.log('R -> ', r);
-        console.log('UserID -> ', userId);
-        console.log('itemId -> ', itemId);
-        console.log('r.hours -> ', r.hours);
         allReservations.push({
             userId,
             itemId,
@@ -269,8 +258,8 @@ router.post('/:id/reserve', ensureAuth, async (req, res) => {
             return console.error(err);
         } else {
             console.log('Mulitple documents inserted: ', docs);
-            req.flash('success_msg', 'Item added');
-            res.redirect('/explore');
+            req.flash('success_msg', 'Reservation was successful!');
+            res.redirect('/explore/' + itemId);
         }
     })
 
@@ -327,6 +316,21 @@ router.post('/:id/reserve', ensureAuth, async (req, res) => {
             });
         }
     });
+})
+
+router.get('/reservation/delete/:id', ensureAuth, async (req, res) => {
+    let id = req.params.id;
+
+    Reservation.findByIdAndRemove(id,(err, result) => {
+        console.log(result);
+        if(err){
+            res.json({ message: err.message });
+        } else {
+            req.flash('success_msg', 'Item deleted successfully!');
+            res.redirect('/users/profile')
+        }
+    });
+
 })
 
 

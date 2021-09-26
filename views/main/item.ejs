@@ -23,11 +23,6 @@ var formatEur = new Intl.NumberFormat(undefined, {
 
 <div id="main">
     <div class="content mt-2">
-            <div class="row px-2">
-                <div class="col">
-                    <%- include('../partials/messages'); %>
-                </div>
-            </div>
 
         <div class="row py-4 px-2">
             <div class="col-content px-2">
@@ -51,15 +46,15 @@ var formatEur = new Intl.NumberFormat(undefined, {
                     <div class="row">
                         <div class="col-12 col-md-auto">
                             <i class="fas fa-envelope mr-2"></i>
-                            <span class="text-secondary"><%= user.email %></span>
+                            <span class="text-secondary"><%= item.ownerData.email %></span>
                         </div>
                         <div class="col-12 col-md-auto">
                             <i class="fas fa-phone mr-2"></i>
-                            <span class="text-secondary"><%= user.phone %></span>
+                            <span class="text-secondary"><%= item.ownerData.phone %></span>
                         </div>
                         <div class="col-12 col-md-auto">
                             <i class="fas fa-map-marker-alt"></i>
-                            <span style="margin-left:4px;" class="text-secondary"><%= `${user.address}, ${user.postalCode} ${user.city}` %></span>
+                            <span style="margin-left:4px;" class="text-secondary"><%= item.address %></span>
                         </div>
                         <div class="col-12 col-md-auto">
                             <i class="fas fa-euro-sign mr-2"></i>
@@ -181,8 +176,6 @@ var formatEur = new Intl.NumberFormat(undefined, {
                 });
 
             }
-            console.log('REDUCE -> ', actualReservations);
-
 
             // first empty all previously made elements indside hidden inputs div, if there are any
             $('#hidden-fields').empty();

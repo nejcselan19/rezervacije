@@ -1,5 +1,15 @@
 <%
     user = typeof user !== "undefined" ? user : {};
+    items = typeof items !== "undefined" ? items : [];
+    reservations = typeof reservations !== "undefined" ? reservations : [];
+
+    let formatEur = new Intl.NumberFormat(undefined, {
+        style: 'currency',
+        currency: 'EUR'
+    });
+
+    const dayMapper = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+
 %>
 <div class="container">
     <div class="row p-4">
@@ -31,6 +41,89 @@
                 </div>
             </div>
         </div>
+    </div>
 
+    My items
+    <hr class="m-0">
+    <div class="d-flex flex-row flex-nowrap horizontal-scroll py-2">
+        <%
+        for(let i = 0; i < items.length; i++){
+            let item = items[i];
+        %>
+        <div class="col-3 p-0 pr-3">
+            <div class="card card-block">
+                <div class="card-img-top clickable-card">
+                    <img class="" src="/uploads/<%= item.image || 'defaultItem.png' %>" alt="items image">
+                    <a href="/explore/<%= item.id %>" class="border click-this"></a>
+                </div>
+                <div class="card-body clickable-card">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="card-title text-nowrap text-truncate"><%= item.title || '- title missing -' %></h6>
+                        </div>
+                    </div>
+                    <a href="/explore/<%= item.id %>" class="border click-this"></a>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <div>
+                        <a class="btn btn-sm btn-outline-danger waves-effect px-3" href="/explore/delete/<%=  item.id %>"
+                           role="button"><i class="fas fa-trash-alt" aria-hidden="true"></i></a>
+                        <a class="btn btn-sm btn-outline-secondary waves-effect px-3" href="/explore/edit/<%=  item.id %>"
+                           role="button"><i class="fas fa-pen" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%
+        }
+        %>
+    </div>
+
+    My reservations
+    <hr class="m-0">
+    <div class="d-flex flex-row flex-nowrap horizontal-scroll py-2">
+        <%
+        for(let i = 0; i < reservations.length; i++){
+            let item = reservations[i];
+
+            let d = dayMapper[item.day - 1];
+            let startH = item.hours[0];
+            let endH = item.hours[item.hours.length - 1] + 1;
+        %>
+        <div class="col-3 p-0 pr-3">
+            <div class="card card-block">
+                <div class="card-img-top clickable-card">
+                    <img class="" src="/uploads/<%= item.data.image || 'defaultItem.png' %>" alt="items image">
+                    <a href="/explore/<%= item.itemId %>" class="border click-this"></a>
+                </div>
+                <div class="card-body clickable-card">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="card-title text-nowrap text-truncate"><%= item.data.title || '- title missing -' %></h6>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p class="card-title text-nowrap text-truncate"><%= d %>, <%= startH %>:00 - <%= endH %>:00</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p class="card-title text-nowrap text-truncate">Cost: <%= formatEur.format(item.totalCost) %></p>
+                        </div>
+                    </div>
+                    <a href="/explore/<%= item.itemId %>" class="border click-this"></a>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <div>
+                        <a class="btn btn-sm btn-outline-danger waves-effect px-3" href="/explore/reservation/delete/<%=  item._id %>"
+                           role="button"><i class="fas fa-trash-alt" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%
+        }
+        %>
     </div>
 </div>

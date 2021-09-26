@@ -3,14 +3,10 @@ user = typeof user !== "undefined" ? user :  {};
 items = typeof items !== "undefined" ? items : [];
 openDialog = typeof openDialog !== "undefined" ? openDialog : null;
 
-// Create our number formatter.
+// Create number formatter.
 var formatEur = new Intl.NumberFormat(undefined, {
     style: 'currency',
-    currency: 'EUR',
-
-    // These options are needed to round to whole numbers if that's what you want.
-    //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
-    //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+    currency: 'EUR'
 });
 %>
 <script>
@@ -60,10 +56,10 @@ var formatEur = new Intl.NumberFormat(undefined, {
                         </div>
                         <div class="card-body clickable-card">
                             <div class="row">
-                                <div class="col">
-                                    <h6 class="card-title"><%= item.title || '- title missing -' %></h6>
+                                <div class="col-7">
+                                    <h6 class="card-title text-nowrap text-truncate"><%= item.title || '- title missing -' %></h6>
                                 </div>
-                                <div class="col-auto">
+                                <div class="col text-right">
                                     <i class="fas fa-euro-sign"></i>
                                     <span style="margin-left:4px;" class="text-secondary"><%= `${formatEur.format(item.price)}/h` %></span>
                                 </div>
@@ -106,10 +102,10 @@ var formatEur = new Intl.NumberFormat(undefined, {
                             <img class="card-img-top" src="/uploads/<%= item.image || 'defaultItem.png' %>" alt="items image">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col">
-                                        <h6 class="card-title"><%= item.title || '- title missing -' %></h6>
+                                    <div class="col-7">
+                                        <h6 class="card-title text-nowrap text-truncate"><%= item.title || '- title missing -' %></h6>
                                     </div>
-                                    <div class="col-auto">
+                                    <div class="col text-right">
                                         <i class="fas fa-euro-sign"></i>
                                         <span style="margin-left:4px;" class="text-secondary"><%= `${formatEur.format(item.price)}/h` %></span>
                                     </div>

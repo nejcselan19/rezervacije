@@ -6,8 +6,6 @@ item = typeof item !== "undefined" ? item : {};
     $(document).ready(function(){
 
         function previewProfileImage( uploader ) {
-            console.log('Uploader ----> ',uploader);
-            console.log('Uploader ----> ',uploader.files);
             //ensure a file was selected
             if( uploader.files && uploader.files[0] ){
                 $('#itemImage2').attr('src', window.URL.createObjectURL(uploader.files[0]) );
@@ -49,11 +47,6 @@ item = typeof item !== "undefined" ? item : {};
     </div>
     <hr style="margin: 0px 20px;">
     <div class="content mt-2">
-            <div class="row px-2">
-                <div class="col">
-                    <%- include('../partials/messages'); %>
-                </div>
-            </div>
             <!--        <input type="hidden" name="_method" value="PUT">-->
             <div class="row px-2">
                 <div class="col-content">

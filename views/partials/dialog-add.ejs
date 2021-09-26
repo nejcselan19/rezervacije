@@ -5,8 +5,6 @@ user = typeof user !== "undefined" ? user :  {};
     $(document).ready(function(){
 
         function previewProfileImage( uploader ) {
-            console.log('Uploader ----> ',uploader);
-            console.log('Uploader ----> ',uploader.files);
             //ensure a file was selected
             if( uploader.files && uploader.files[0] ){
                 $('#itemImage2').attr('src', window.URL.createObjectURL(uploader.files[0]) );
@@ -33,11 +31,6 @@ user = typeof user !== "undefined" ? user :  {};
                 <div class="row">
                     <div class="col">
                         <span class="close"><i data-feather="x"></i></span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <%- include('../partials/messages'); %>
                     </div>
                 </div>
                 <form action="/explore/add" enctype="multipart/form-data"  method="POST">

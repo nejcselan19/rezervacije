@@ -6,6 +6,8 @@ const fs = require('fs');
 
 // User model
 const User = require('../models/User');
+const Item = require('../models/Item');
+const Reservation = require('../models/Reservation');
 const { ensureAuth } = require("../config/auth");
 
 const multer = require("multer");
@@ -53,7 +55,22 @@ router.get('/register', (req,res) => res.render('register', { layout: './layouts
 router.get('/login', (req,res) => res.render('login', { layout: './layouts/layout'}));
 
 // User profile page
-router.get('/profile', ensureAuth, (req,res) => res.render('profile', { user: req.user }));
+router.get('/profile', ensureAuth, async (req,res) => {
+    const items = await Item.find({ ownerId: req.user._id });
+    const reservations = await Reservation.find({ userId: req.user._id });
+
+    for(let i = 0; i < reservations.length; i++){
+        let resrv = reservations[i];
+        let resrvItem = await Item.findById(resrv.itemId);
+
+        reservations[i].data = {
+            title: resrvItem.title,
+            image: resrvItem.image
+        }
+    }
+
+    res.render('profile', { user: req.user, items, reservations })
+});
 
 // @desc Show user edit page
 // @route GET /users/edit/:id
