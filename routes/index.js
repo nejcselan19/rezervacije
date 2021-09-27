@@ -9,15 +9,9 @@ const {getFileStream} = require("../s3");
 // Home page
 router.get('/', (req,res) => {
     if (req.isAuthenticated()) {
-        res.render('home', {
-            _pageTitle: 'Home - Logged user',
-            _user: req.user
-        })
+        res.redirect('/explore');
     } else {
-        res.render('home', {
-            _pageTitle: 'Home - No user',
-            layout: './layouts/layout'
-        })
+        res.redirect('/users/login');
     }
 });
 

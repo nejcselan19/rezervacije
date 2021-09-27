@@ -11,13 +11,50 @@ var formatEur = new Intl.NumberFormat(undefined, {
 %>
 <script>
     let openDialog = JSON.parse('<%- JSON.stringify(openDialog) %>');
+
+    const queryString = window.location.search;
+    console.log(queryString);
+    const urlParams = new URLSearchParams(queryString);
+    const category = urlParams.get('category')
+    console.log(category);
+    $(document).ready(function(){
+        if(urlParams.has('category')){
+            console.log('Categories!!')
+
+            let textMap = {
+                'sport-courts': 'Sport courts',
+                'vehicle': 'Vehicles',
+                'service': 'Services',
+                'other': 'Other'
+            }
+
+            let headingExplore = $("#heading-explore");
+            headingExplore.text(textMap[category]);
+
+            let allItems = $(".sort-category");
+            allItems.hide();
+
+            let elementClass =`.sort-category.${category}`;
+            console.log(elementClass);
+
+            let categoryItems = $(elementClass);
+            categoryItems.show();
+            console.log('blaa')
+            console.log(allItems);
+            console.log(categoryItems);
+        } else {
+            let headingExplore = $("#heading-explore");
+            headingExplore.text('All');
+        }
+    })
 </script>
 
 <div id="mySidebar" class="sidebar">
-    <a href="#">Sport courts</a>
-    <a href="#">Vehicles</a>
-    <a href="#">Items</a>
-    <a href="#">Services</a>
+    <a href="/explore">All</a>
+    <a href="/explore?category=sport-court">Sport courts</a>
+    <a href="/explore?category=vehicle">Vehicles</a>
+    <a href="/explore?category=service">Services</a>
+    <a href="/explore?category=other">Others</a>
 </div>
 
 <div id="main">
@@ -48,7 +85,7 @@ var formatEur = new Intl.NumberFormat(undefined, {
                     for(let i = 0; i < myItems.length; i++){
                         let item = myItems[i];
                 %>
-                <div class="col-3 p-0 pr-3">
+                <div class="col-3 p-0 pr-3 sort-category <%= item.category %>">
                     <div class="card card-block">
                         <div class="card-img-top clickable-card">
                             <img class="" src="<%= item.image || 'defaultItem.png' %>" alt="items image">
@@ -97,7 +134,7 @@ var formatEur = new Intl.NumberFormat(undefined, {
                 for(let i = 0; i < otherItems.length; i++){
                     let item = otherItems[i];
                 %>
-                    <div class="col-3 p-0 pr-3">
+                    <div class="col-3 p-0 pr-3 sort-category <%= item.category %>">
                         <div class="card card-block clickable-card">
                             <img class="card-img-top" src="<%= item.image || 'defaultItem.png' %>" alt="items image">
                             <div class="card-body">

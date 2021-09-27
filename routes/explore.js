@@ -10,10 +10,11 @@ require('dotenv').config();
 const nodemailer = require('nodemailer');
 var ejs = require("ejs");
 
-// Item model
+// Models
 const Item = require('../models/Item');
 const User = require('../models/User');
 const Reservation = require('../models/Reservation');
+
 const { ensureAuth } = require("../config/auth");
 
 // multer
