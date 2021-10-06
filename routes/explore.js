@@ -23,6 +23,7 @@ const path = require("path");
 
 // s3
 const { uploadFile } = require('../s3');
+const Process = require("process");
 
 // upload stuff
 // Set storage engine - Multer
@@ -73,7 +74,8 @@ var formatEur = new Intl.NumberFormat(undefined, {
 // ROUTES
 // Explore route
 router.get('/', ensureAuth, ash(async(req,res) => {
-    const allItems = await Item.find();
+    const allItems = await Item.find().lean();
+    console.log(allItems);
     res.render('main/explore', { user: req.user, items: allItems})
 }));
 
@@ -130,9 +132,12 @@ router.post('/add', upload, ash(async(req, res) => {
     const userId = req.user;
     const { title, shortDesc, longDesc, price, address, category } = data;
 
-    const result = await uploadFile(file);
-    await unlinkFile(file.path);
-    const image = `/images/${result.key}`;
+    let image;
+    if(file){
+        const result = await uploadFile(file);
+        await unlinkFile(file.path);
+        image = `/images/${result.key}`;
+    }
 
     let errors = [];
 
@@ -185,12 +190,14 @@ router.post('/edit/:id', ensureAuth, upload, async (req, res) => {
     let newData = req.body;
     let file = req.file;
 
-    const result = await uploadFile(file);
-    await unlinkFile(file.path);
-    const image = `/images/${result.key}`;
+    if(file){
+        const result = await uploadFile(file);
+        await unlinkFile(file.path);
+        const image = `/images/${result.key}`;
 
-    // add image name to body data
-    newData.image = image;
+        // add image name to body data
+        newData.image = image;
+    }
 
     let item = await Item.findById(req.params.id).lean();
 
@@ -284,7 +291,7 @@ router.post('/:id/reserve', ensureAuth, async (req, res) => {
         }
     });
 
-    ejs.renderFile("./views/template.reservation-mail.ejs", { user, item, allReservations }, function (err, template) {
+    ejs.renderFile("./views/template.reservation-mail.ejs", { user, item, allReservations, appRoot: process.env.APPROOT  }, function (err, template) {
         if (err) {
             console.log(err);
         } else {
@@ -304,7 +311,7 @@ router.post('/:id/reserve', ensureAuth, async (req, res) => {
         }
     });
 
-    ejs.renderFile("./views/template.notify-mail.ejs", { user, item, allReservations }, function (err, template) {
+    ejs.renderFile("./views/template.notify-mail.ejs", { user, item, allReservations, appRoot: process.env.APPROOT }, function (err, template) {
         if (err) {
             console.log(err);
         } else {

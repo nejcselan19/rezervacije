@@ -148,7 +148,7 @@ body {
     top: 0;
     width: 100%; /* Full width */
     height: 100%; /* Full height */
-    overflow: hidden; /* Enable scroll if needed */
+    overflow: auto; /* Enable scroll if needed */
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
 }
@@ -165,7 +165,6 @@ body {
     display: table-cell;
     vertical-align: middle;
 }
-
 /* Modal Content/Box */
 .dialog-content {
     background: #fff; /* Fallback color */
@@ -176,7 +175,6 @@ body {
     border: 1px solid #888;
     width: 50%; /* Could be more or less, depending on screen size */
 }
-
 /* The Close Button */
 .close {
     color: #aaa;

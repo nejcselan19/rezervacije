@@ -98,12 +98,14 @@ router.post('/edit/:id', ensureAuth, upload, async (req, res) => {
     let newData = req.body;
     let file = req.file;
 
-    const result = await uploadFile(file);
-    await unlinkFile(file.path);
-    const image = `/images/${result.key}`;
+    if(file){
+        const result = await uploadFile(file);
+        await unlinkFile(file.path);
+        const image = `/images/${result.key}`;
 
-    // add image name to body data
-    newData.profilePic = image;
+        // add image name to body data
+        newData.profilePic = image;
+    }
 
     let user = await User.findById(req.params.id).lean();
 
@@ -153,7 +155,7 @@ router.post('/register', (req, res) => {
 
     if (errors.length > 0) {
         data.errors = errors;
-        res.render('register', { ...data });
+        res.render('register', { ...data, layout: './layouts/layout' });
     } else {
         // Validation passed
         User.findOne({email: email})
@@ -174,7 +176,6 @@ router.post('/register', (req, res) => {
                         city,
                         password
                     });
-
                     // Hash Password
                     bcrypt.genSalt(10, (err, salt) =>
                         bcrypt.hash(newUser.password, salt, (err, hash) => {
